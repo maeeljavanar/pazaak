@@ -35,18 +35,21 @@ function close() {
 
 //catch all for now
 exports.executeQuery = function(sql, vals) {
-    connect();
+    return new Promise(resolve => {
+        connect();
 
-    connection.execute(sql, vals, (err, rows) => {
-       if(err) {
-           console.log("Error: " + JSON.stringify(err));
-       }
-
-        connection.unprepare(sql); //close cached statement
-        close(); //close connection
-        if(rows) {
-            console.log("Response: " + JSON.stringify(rows));
-            return rows;
-        }
-    });   
+        connection.execute(sql, vals, (err, rows) => {
+           if(err) {
+               console.log("Error: " + JSON.stringify(err));
+               resolve(false);
+           }
+    
+            connection.unprepare(sql); //close cached statement
+            close(); //close connection
+            if(rows) {
+                console.log("Response: " + JSON.stringify(rows));
+                resolve(rows);
+            }
+        });
+    });  
 }
