@@ -1,4 +1,4 @@
-const confg = require('../config.json');
+const config = require('../config.json');
 var mysql = require('mysql2');
 var connection;
 
@@ -8,15 +8,15 @@ var connection;
  */
 function connect() {
     connection = mysql.createConnection({
-        host: confg.dbHost,
-        user: confg.dbUser,
-        password: confg.dbPassword,
-        database: confg.dbName
+        host: config.dbHost,
+        user: config.dbUser,
+        password: config.dbPassword,
+        database: config.dbName
     });
     
     connection.connect(function(err) {
         if (err) {
-            return console.error('error: ' + err.message);
+            console.error('error: ' + err.message);
         } else {
             console.log('Connected to the MySQL server.');
         }
