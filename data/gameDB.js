@@ -24,8 +24,23 @@ exports.createGame = async function(player1ID, player2ID) {
     let response = await database.executeQuery("INSERT INTO game VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [gameid, player1ID, player2ID, turn, pointsP1, pointsP2, null, set, standP1, standP2]);
     console.log("Response from insert: ", response);
     if(response.affectedRows == 1) {
+        return gameid;
+    } else {
+        return false;
+    }
+}
+
+exports.setPlayer2 = async function(gameid, player2ID) {
+    let response = await database.executeQuery('UPDATE game SET player2 = ? WHERE gameid = ?', [player2ID, gameid]);
+    console.log("Response from update: ", response);
+    if(response.affectedRows == 1) {
         return true;
     } else {
         return false;
     }
+}
+
+exports.getPlayer1 = async function(gameid) {
+    let player1ID = await database.executeQuery('SELECT player1 FROM game WHERE gameid = ?', [gameid]);
+    return player1ID;
 }
