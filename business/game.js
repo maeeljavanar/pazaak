@@ -3,15 +3,27 @@ var tableDB = require('../data/tableDB.js');
 var handDB = require('../data/handDB.js');
 var availableCards = require('./cardcodes.json');
 
+//helper so I don't have to keep writing this
+function random(min, max) {
+    return parseInt((Math.random() * (max - min + 1)), 10) + min;
+}
+
 async function dealHand(gameid, player) {
     let length = availableCards.length;
     for(let i = 0; i < 4; i++) {
-        let success = handDB.createCard(gameid, player, availableCards[Math.round(Math.random() * length)]);
+        let success = await handDB.createCard(gameid, player, availableCards[random(0, length-1)]);
         if(!success) {
             return {"success":false, "error": "Error adding card to hand"}
         }
     }
     return {"success": true};
+}
+
+async function dealCard(gameid, playerid, set) {
+    let card = 't' + random(0, 9);
+    let success = await tableDB.createCard(gameid, playerid, set, card);
+    
+    return success;
 }
 
 exports.openGame = async function(player1ID, callback) {
@@ -22,7 +34,6 @@ exports.openGame = async function(player1ID, callback) {
     } else {
         callback({"error": "Error opening lobby"});
     }
-
 }
 
 exports.joinGame = async function(gameid, player2ID, callback) {
@@ -40,19 +51,22 @@ exports.joinGame = async function(gameid, player2ID, callback) {
 
             if(success.success) {
                 callback(gameid)
+
+                //deal first card
+                success = dealCard(gameid, player1ID, 1);
+                if(success) {
+                    callback(success);
+                } else {
+                    callback({"error": "error dealing cards"});
+                }
             } else {
                 callback({"error": "error dealing cards"});
             }
         } else {
             callback({"error": "error dealing cards"});
         }
-
-        //deal p1 hand
-        let player1ID = await gameDB.getPlayer1(gameid);
-        dealHand(gameid, player1ID);
-
-        callback(success);
     } else {
         callback({"error": "Error joining lobby"});
     }
 }
+
