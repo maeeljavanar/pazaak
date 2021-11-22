@@ -70,3 +70,27 @@ exports.joinGame = async function(gameid, player2ID, callback) {
     }
 }
 
+exports.getStatus = async function(gameid, playerid, callback) {
+
+    let game = gameDB.getGame(gameid);
+
+    //error if the player is not part of this game
+    if(game.player1 != playerid && game.player2 != playerid) {
+        return {"error": "Requested game does not exist or you do not have access"};
+    }
+
+    //get other player id
+    let enemyid;
+    if(game.player1 == playerid) {
+        enemyid = game.player2;
+    } else {
+        enemyid = game.player1;
+    }
+
+    game.hand = await handDB.getCards(gameid, playerid);
+    game.enemyHand = await handDB.getEnemyCards(gameid, enemyid);
+    game.table = await tableDB.getCards(gameid, playerid);
+    game.enemyTable = await tableDB.getCards(gameid, enemyid);
+
+    return {"success": true, "game": game};
+}

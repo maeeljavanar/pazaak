@@ -30,6 +30,12 @@ exports.createGame = async function(player1ID, player2ID) {
     }
 }
 
+exports.getGame = async function(gameid) {
+    let game = await database.executeQuery("SELECT gameid, player1, player2, turn, player1_points, player2_points, winner, set, player1_stand, player2_stand FROM game WHERE gameid = ?", [gameid]);
+    return game[0];
+
+}
+
 exports.setPlayer2 = async function(gameid, player2ID) {
     let response = await database.executeQuery('UPDATE game SET player2 = ? WHERE gameid = ?', [player2ID, gameid]);
     console.log("Response from update: ", response);

@@ -67,6 +67,15 @@ router.post('/joinLobby', function(req, res, next) {
   
 });
 
+router.post('/gameStatus', function(req, res, next) {
+  let requestJWT = validateToken(req.body.token);
+  if(req.body.gameid) {
+    game.getStatus(req.body.gameid, requestJWT.sub, status => {
+      res.json(status);
+    });
+  }
+});
+
 function generateToken(req, userid) {
   
   var token = jwt.sign({
