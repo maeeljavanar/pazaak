@@ -5,11 +5,6 @@ var user = require('../business/user.js');
 var game = require('../business/game.js');
 var jwt = require('jsonwebtoken');
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
-
 router.post('/login', function(req, res, next) {
   user.login(req.body.username, req.body.password, userid => {
     
