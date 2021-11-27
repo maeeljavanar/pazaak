@@ -5,6 +5,12 @@ var user = require('../business/user.js');
 var game = require('../business/game.js');
 var jwt = require('jsonwebtoken');
 
+//frontend routes
+router.get('/', (req, res) => {
+  res.sendFile('./public/html/lobby.html', {root: config.root});
+});
+
+//backend routes
 router.post('/login', function(req, res, next) {
   user.login(req.body.username, req.body.password, userid => {
     

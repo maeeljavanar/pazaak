@@ -96,5 +96,5 @@ exports.getStatus = async function(gameid, playerid, callback) {
 }
 
 exports.getGameList = async function(callback) {
-    callback(gameDB.getGameList());
+    callback(await gameDB.getGameList());
 }
