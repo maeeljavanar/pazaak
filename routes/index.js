@@ -71,6 +71,13 @@ router.post('/gameStatus', function(req, res, next) {
   }
 });
 
+router.get('/gameList', function(req, res, next) {
+  //No login required
+  game.getGameList(list => {
+    res.json(list);
+  });
+});
+
 function generateToken(req, userid) {
   
   var token = jwt.sign({

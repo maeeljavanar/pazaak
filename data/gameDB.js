@@ -50,3 +50,8 @@ exports.getPlayer1 = async function(gameid) {
     let player1ID = await database.executeQuery('SELECT player1 FROM game WHERE gameid = ?', [gameid]);
     return player1ID;
 }
+
+exports.getGameList = async function() {
+    let games = await database.executeQuery('SELECT game.gameid, player.userid as hostid, player.username as hostuser FROM game LEFT JOIN player ON game.player1 = player.userid WHERE game.player2 IS NULL', []);
+    return games;
+}

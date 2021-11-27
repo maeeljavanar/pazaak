@@ -94,3 +94,7 @@ exports.getStatus = async function(gameid, playerid, callback) {
 
     return {"success": true, "game": game};
 }
+
+exports.getGameList = async function(callback) {
+    callback(gameDB.getGameList());
+}
