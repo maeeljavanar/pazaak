@@ -5,6 +5,14 @@
     margin-top: 2em;
     padding: 2em;
     border: 2px solid black;
+    grid-column: 1;
+}
+
+#rightSide {
+    grid-column: 2;
+    margin: auto;
+    min-width: 250px;
+    max-width: 500px;
 }
 
 #loginForm {
@@ -55,4 +63,31 @@ header span {
 a {
     text-decoration: none;
     color: inherit;
+}
+
+main {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    margin: 0;
+    width: 100%;
+}
+
+#openGame {
+    width: 100%;
+    background-color: gray;
+    font-size: 2em;
+    color: white;
+    padding: 0.5em;
+    margin-top: 2em;
+    text-align: center;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.8);
+    transition: 0.3s;
+}
+
+#openGame:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.8);
+}
+
+#openGame:active {
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.8);
 }

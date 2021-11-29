@@ -22,6 +22,10 @@ router.get('/login', (req, res) => {
   res.sendFile('./public/html/login.html', {root: config.root});
 });
 
+router.get('/game', (req, res) => {
+  res.sendFile('./public/html/game.html', {root: config.root});
+});
+
 //backend routes
 router.post('/createAccount', function(req, res) {
   user.createAccount(req.body.username, req.body.password, userid => {
