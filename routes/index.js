@@ -11,14 +11,22 @@ router.get('/', (req, res) => {
 });
 
 //backend routes
-router.post('/login', function(req, res, next) {
-  user.login(req.body.username, req.body.password, userid => {
-    
-    if(userid) {
-
+router.post('/createAccount', function(req, res) {
+  user.createAccount(req.body.username, req.body.password, userid => {
+    if(userid != undefined) {
       var token = generateToken(req, userid);
       res.json({"success": true, "token": token});
+    } else {
+      res.json({"success": false});
+    }
+  });
+});
 
+router.post('/login', function(req, res, next) {
+  user.login(req.body.username, req.body.password, userid => {
+    if(userid != undefined) {
+      var token = generateToken(req, userid);
+      res.json({"success": true, "token": token});
     } else {
       res.json({"success": false});
     }

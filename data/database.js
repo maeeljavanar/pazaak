@@ -40,7 +40,7 @@ exports.executeQuery = function(sql, vals) {
 
         connection.execute(sql, vals, (err, rows) => {
            if(err) {
-               console.log("Error: " + JSON.stringify(err));
+               console.log("Error: ", JSON.stringify(err), err);
                resolve(false);
            }
     

@@ -8,7 +8,8 @@ async function hashPassword(password) {
 
 async function verifyPassword(storedHash, password, username, callback) {
     if (await argon2.verify(storedHash, password)) {
-        callback(userdb.getId(username));
+        let userid = await userdb.getId(username);
+        callback(userid);
     } else {
         callback();
     }
@@ -24,3 +25,10 @@ exports.login = function(username, password, callback) {
 
 } //login
 
+exports.createAccount = async function(username, password, callback) {
+
+    let storedHash = await hashPassword(password);
+    let userid = await userdb.createAccount(username, storedHash);
+    callback(userid);
+
+}
