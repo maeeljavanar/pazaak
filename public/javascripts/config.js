@@ -1,1 +1,0 @@
-var backendUrl = '//localhost:8080';

@@ -10,6 +10,18 @@ router.get('/', (req, res) => {
   res.sendFile('./public/html/lobby.html', {root: config.root});
 });
 
+router.get('/signup', (req, res) => {
+  res.sendFile('./public/html/signup.html', {root: config.root});
+});
+
+router.get('/logout', (req, res) => {
+  res.sendFile('./public/html/logout.html', {root: config.root});
+});
+
+router.get('/login', (req, res) => {
+  res.sendFile('./public/html/login.html', {root: config.root});
+});
+
 //backend routes
 router.post('/createAccount', function(req, res) {
   user.createAccount(req.body.username, req.body.password, userid => {
