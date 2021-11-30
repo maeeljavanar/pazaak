@@ -1,3 +1,10 @@
+main {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    margin: 0;
+    width: 100%;
+}
+
 #gamelist {
     min-width: 500px;
     max-width: 1000px;
@@ -8,8 +15,18 @@
     grid-column: 1;
 }
 
-#rightSide {
+#myGames {
+    min-width: 500px;
+    max-width: 1000px;
+    margin: auto;
+    margin-top: 2em;
+    padding: 2em;
+    border: 2px solid black;
     grid-column: 2;
+}
+
+#rightSide {
+    grid-column: 3;
     margin: auto;
     min-width: 250px;
     max-width: 500px;
@@ -65,13 +82,6 @@ a {
     color: inherit;
 }
 
-main {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    margin: 0;
-    width: 100%;
-}
-
 #openGame {
     width: 100%;
     background-color: gray;
@@ -90,4 +100,12 @@ main {
 
 #openGame:active {
     box-shadow: 0 2px 4px 0 rgba(0,0,0,0.8);
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
 }

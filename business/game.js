@@ -95,6 +95,11 @@ exports.getStatus = async function(gameid, playerid, callback) {
     return {"success": true, "game": game};
 }
 
+//No real business logic, these two are just SQL queries
 exports.getGameList = async function(callback) {
     callback(await gameDB.getGameList());
+}
+
+exports.getUsersGames = async function(userid, callback) {
+    callback(await gameDB.getUsersGames(userid))
 }

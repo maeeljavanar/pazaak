@@ -55,3 +55,13 @@ exports.getGameList = async function() {
     let games = await database.executeQuery('SELECT game.gameid, player.userid as hostid, player.username as hostuser FROM game LEFT JOIN player ON game.player1 = player.userid WHERE game.player2 IS NULL', []);
     return games;
 }
+
+exports.getUsersGames = async function(userid) {
+    let games = await database.executeQuery('SELECT game.gameid, game.player1 as hostid, game.player2 as guestid, p1.username as hostuser, p2.username as guestuser '
+            + 'FROM game LEFT JOIN player as p1 ON player1 = p1.userid '
+            + 'LEFT JOIN player as p2 ON player2 = p2.userid '
+            + 'WHERE player1 = ? OR player2 = ?', [userid, userid]);
+    
+    
+    return games;
+}

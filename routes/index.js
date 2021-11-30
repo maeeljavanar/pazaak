@@ -108,6 +108,13 @@ router.get('/gameList', function(req, res, next) {
   });
 });
 
+router.post('/myGames', function(req, res, next) {
+  let requestJWT = validateToken(req.body.token);
+  game.getUsersGames(requestJWT.sub, list => {
+    res.json(list);
+  })
+});
+
 function generateToken(req, userid) {
   
   var token = jwt.sign({
