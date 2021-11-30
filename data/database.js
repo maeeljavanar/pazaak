@@ -1,13 +1,12 @@
 const config = require('../config.json');
 var mysql = require('mysql2');
-var connection;
 
 /**
  * Open/close connection for each call for now
  * Later can rewrite to use connection pool
  */
 function connect() {
-    connection = mysql.createConnection({
+    let connection = mysql.createConnection({
         host: config.dbHost,
         user: config.dbUser,
         password: config.dbPassword,
@@ -21,9 +20,11 @@ function connect() {
             console.log('Connected to the MySQL server.');
         }
     });
+
+    return connection;
 }
 
-function close() {
+function close(connection) {
     connection.end(function(err) {
         if (err) {
             console.log('error:' + err.message);
@@ -36,7 +37,7 @@ function close() {
 //catch all for now
 exports.executeQuery = function(sql, vals) {
     return new Promise(resolve => {
-        connect();
+        let connection = connect();
 
         connection.execute(sql, vals, (err, rows) => {
            if(err) {
@@ -45,7 +46,7 @@ exports.executeQuery = function(sql, vals) {
            }
     
             connection.unprepare(sql); //close cached statement
-            close(); //close connection
+            close(connection); //close connection
             if(rows) {
                 console.log("Response: " + JSON.stringify(rows));
                 resolve(rows);
