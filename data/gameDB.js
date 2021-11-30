@@ -60,7 +60,7 @@ exports.getUsersGames = async function(userid) {
     let games = await database.executeQuery('SELECT game.gameid, game.player1 as hostid, game.player2 as guestid, p1.username as hostuser, p2.username as guestuser '
             + 'FROM game LEFT JOIN player as p1 ON player1 = p1.userid '
             + 'LEFT JOIN player as p2 ON player2 = p2.userid '
-            + 'WHERE player1 = ? OR player2 = ?', [userid, userid]);
+            + 'WHERE (player1 = ? OR player2 = ?) AND winner IS NULL', [userid, userid]);
     
     
     return games;
