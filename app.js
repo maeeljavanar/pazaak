@@ -10,7 +10,6 @@ var indexRouter = require('./routes/index');
 
 var app = express();
 
-// view engine setup
 app.use(express.static(__dirname + '/public'))
 app.use(cors());
 app.use(logger('dev'));

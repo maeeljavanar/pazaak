@@ -9,7 +9,86 @@
 <body> 
   <main>
 
-    <p>Congrats you're on a game page or something</p>
+    <svg width="1100px" height="900px">
+      <rect width="1100px" height="900px" fill="#37393F" />
+
+      <g id="player" >
+
+        <g id="playerInfo">
+          <circle id="playerTurn" r="30px" cx="70px" cy="70px" fill="#5D606B" />
+          <circle id="playerSet1" r="20px" cx="30px" cy="150px" fill="#5D606B" />
+          <circle id="playerSet2" r="20px" cx="30px" cy="200px" fill="#5D606B" />
+          <circle id="playerSet3" r="20px" cx="30px" cy="250px" fill="#5D606B" />
+          <text id="playerName" class="text" x="110px" y="80px">Player</text>
+          <text id="playerCount" x="380px" y="80px" class="text">0</text>
+        </g>
+
+        <g id="playerTable">
+          <rect id="table0" width="100px" height="150px" fill="#5D606B" x="100px" y="100px" />
+          <rect id="table1" width="100px" height="150px" fill="#5D606B" x="205px" y="100px" />
+          <rect id="table2" width="100px" height="150px" fill="#5D606B" x="310px" y="100px" />
+          <rect id="table3" width="100px" height="150px" fill="#5D606B" x="100px" y="255px" />
+          <rect id="table4" width="100px" height="150px" fill="#5D606B" x="205px" y="255px" />
+          <rect id="table5" width="100px" height="150px" fill="#5D606B" x="310px" y="255px" />
+          <rect id="table6" width="100px" height="150px" fill="#5D606B" x="100px" y="410px" />
+          <rect id="table7" width="100px" height="150px" fill="#5D606B" x="205px" y="410px" />
+          <rect id="table8" width="100px" height="150px" fill="#5D606B" x="310px" y="410px" />
+        </g>
+        
+        <g id="playerHand">
+          <rect id="playerHand0" width="100px" height="150px" fill="#5D606B" x="50px" y="600px" />
+          <rect id="playerHand1" width="100px" height="150px" fill="#5D606B" x="155px" y="600px" />
+          <rect id="playerHand2" width="100px" height="150px" fill="#5D606B" x="260px" y="600px" />
+          <rect id="playerHand3" width="100px" height="150px" fill="#5D606B" x="365px" y="600px" />
+          <rect id="playerHandFlip0" width="100px" height="50px" fill="#191919" x="50px" y="755px" />
+          <rect id="playerHandFlip1" width="100px" height="50px" fill="#191919" x="155px" y="755px" />
+          <rect id="playerHandFlip2" width="100px" height="50px" fill="#191919" x="260px" y="755px" />
+          <rect id="playerHandFlip3" width="100px" height="50px" fill="#191919" x="365px" y="755px" />
+        </g>
+      </g>
+
+      <g id="enemy">
+
+        <g id="enemyInfo">
+          <circle id="enemyTurn" r="30px" cx="1030px" cy="70px" fill="#5D606B" />
+          <circle id="enemySet1" r="20px" cx="1070px" cy="150px" fill="#5D606B" />
+          <circle id="enemySet2" r="20px" cx="1070px" cy="200px" fill="#5D606B" />
+          <circle id="enemySet3" r="20px" cx="1070px" cy="250px" fill="#5D606B" />
+          <text id="enemyName" x="900px" y="80px">Enemy</text>
+          <text id="enemyCount" x="720px" y="80px">0</text>
+        </g>
+
+        <g id="enemyTable">
+          <rect id="table0" width="100px" height="150px" fill="#5D606B" x="900px" y="100px" />
+          <rect id="table1" width="100px" height="150px" fill="#5D606B" x="795px" y="100px" />
+          <rect id="table2" width="100px" height="150px" fill="#5D606B" x="690px" y="100px" />
+          <rect id="table3" width="100px" height="150px" fill="#5D606B" x="900px" y="255px" />
+          <rect id="table4" width="100px" height="150px" fill="#5D606B" x="795px" y="255px" />
+          <rect id="table5" width="100px" height="150px" fill="#5D606B" x="690px" y="255px" />
+          <rect id="table6" width="100px" height="150px" fill="#5D606B" x="900px" y="410px" />
+          <rect id="table7" width="100px" height="150px" fill="#5D606B" x="795px" y="410px" />
+          <rect id="table8" width="100px" height="150px" fill="#5D606B" x="690px" y="410px" />
+        </g>
+
+        <g id="enemyHand">
+          <rect id="enemyHand0" width="100px" height="150px" fill="#5D606B" x="950px" y="600px" />
+          <rect id="enemyHand1" width="100px" height="150px" fill="#5D606B" x="845px" y="600px" />
+          <rect id="enemyHand2" width="100px" height="150px" fill="#5D606B" x="740px" y="600px" />
+          <rect id="enemyHand3" width="100px" height="150px" fill="#5D606B" x="635px" y="600px" />
+        </g>
+
+        <g id="controls">
+          <rect id="endTurn" class="svgButton" width="205px" height="67px" x="635px" y="755px" fill="#191919" rx="10px" ry="10px"></rect>
+          <rect id="stand" class="svgButton" width="205px" height="67px" x="845px" y="755px" fill="#191919" rx="10px" ry="10px"></rect>
+          <rect id="forfeit" class="svgButton" width="415px" height="67px" x="635px" y="828px" fill="#191919" rx="10px" ry="10px"></rect>
+          <text x="680px" y="795px">End Turn</text>
+          <text x="910px" y="795px">Stand</text>
+          <text x="800px" y="870px">Forfeit</text>
+        </g>
+
+      </g>
+      
+    </svg>
 
   </main>
   
