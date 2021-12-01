@@ -1,21 +1,22 @@
 $(document).ready(function() {
-    $.getJSON(`${backendUrl}/gameList`, games => {
-        console.log('GameList response returned');
-        let gamesList = '';
-        games.forEach(game => {
-            gamesList += `<div class="game" id="game${game.gameid}">`;
-            gamesList += `<p id="host${game.hostid}">Host: ${game.hostuser}</p>`;
-            gamesList += `</div>`;
-        });
-    
-        $('#gamelist').append(gamesList);
-    });
-
     /**
      * Locked behind login
      */
     
     if(window.sessionStorage.authToken && window.sessionStorage.authToken != 'undefined') {
+
+        //open games with joining
+        $.getJSON(`${backendUrl}/gameList`, games => {
+            console.log('GameList response returned');
+            let gamesList = '';
+            games.forEach(game => {
+                gamesList += `<div class="game" id="game${game.gameid}" onclick="joinGame(${game.gameid})">`;
+                gamesList += `<p id="host${game.hostid}">Host: ${game.hostuser}</p>`;
+                gamesList += `</div>`;
+            });
+        
+            $('#gamelist').append(gamesList);
+        });
 
         //get user's active games
         $.post(`${backendUrl}/myGames`, {"token": window.sessionStorage.authToken}, games => {
@@ -37,7 +38,23 @@ $(document).ready(function() {
         //Show create lobby button
         $('#controls').append(`<div id="openGame"><p>Open Game</p></div>`);
         $('#openGame').click(openGame);
+
+    /**
+     * Fill in data for users before login
+     */
     } else {
+        //full game list with no joining
+        $.getJSON(`${backendUrl}/gameList`, games => {
+            console.log('GameList response returned');
+            let gamesList = '';
+            games.forEach(game => {
+                gamesList += `<div class="game" id="game${game.gameid}">`;
+                gamesList += `<p id="host${game.hostid}">Host: ${game.hostuser}</p>`;
+                gamesList += `</div>`;
+            });
+        
+            $('#gamelist').append(gamesList);
+        });
 
         $('#myGames').append('<p>Log in to view your games</p>');
 
@@ -47,6 +64,17 @@ $(document).ready(function() {
 
 function openGame() {
     $.post(`${backendUrl}/openLobby`, {"token": window.sessionStorage.authToken}, response => {
+        console.log(response);
+        if(response.success) {
+            loadGame(response.gameid);
+        } else {
+            alert("Error creatng game");
+        }
+    });
+}
+
+function joinGame(gameid) {
+    $.post(`${backendUrl}/joinLobby`, {"token": window.sessionStorage.authToken, "gameid": gameid}, response => {
         console.log(response);
         if(response.success) {
             loadGame(response.gameid);

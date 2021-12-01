@@ -37,6 +37,14 @@ exports.openGame = async function(player1ID, callback) {
 }
 
 exports.joinGame = async function(gameid, player2ID, callback) {
+
+    //get host and make sure player is not joining their own game
+    let player1ID = await gameDB.getPlayer1(gameid);
+    if(player1ID == player2ID) {
+        callback({"error": "Cannot join a game you are hosting"});
+        return;
+    }
+
     //join player 2 to the game
     let success = await gameDB.setPlayer2(gameid, player2ID);
     if(success) {
@@ -46,7 +54,6 @@ exports.joinGame = async function(gameid, player2ID, callback) {
         if(success.success) {
 
             //deal p1 hand
-            let player1ID = await gameDB.getPlayer1(gameid);
             success = await dealHand(gameid, player1ID);
 
             if(success.success) {

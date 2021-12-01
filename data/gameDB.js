@@ -48,6 +48,7 @@ exports.setPlayer2 = async function(gameid, player2ID) {
 
 exports.getPlayer1 = async function(gameid) {
     let player1ID = await database.executeQuery('SELECT player1 FROM game WHERE gameid = ?', [gameid]);
+    player1ID = player1ID[0].player1;
     return player1ID;
 }
 

@@ -2,7 +2,7 @@ var database = require('./database.js');
 
 exports.createCard = async function(gameid, playerid, card) {
     //insert into database
-    let response = await database.executeQuery("INSERT INTO hand_card VALUES(?, ?, ?)", [gameid, playerid, card]);
+    let response = await database.executeQuery("INSERT INTO hand_card(gameid, playerid, card_code) VALUES(?, ?, ?)", [gameid, playerid, card]);
     console.log("Response from insert: ", response);
     if(response.affectedRows == 1) {
         return true;
