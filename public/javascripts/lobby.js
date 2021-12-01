@@ -26,6 +26,10 @@ $(document).ready(function() {
                 gamesList += `<pre><p id="host${game.hostid}">Host: ${game.hostuser}\t\t\t\tGuest: ${game.guestuser}</p></pre>`;
                 gamesList += `</div>`;
             });
+
+            if(gamesList == '') {
+                gamesList = '<p>No active games</p>';
+            }
         
             $('#myGames').append(gamesList);
         });
@@ -34,6 +38,9 @@ $(document).ready(function() {
         $('#controls').append(`<div id="openGame"><p>Open Game</p></div>`);
         $('#openGame').click(openGame);
     } else {
+
+        $('#myGames').append('<p>Log in to view your games</p>');
+
         $('#controls').append(`<p>Log in to access lobby controls</p>`);
     }
 });
