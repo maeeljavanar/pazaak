@@ -2,7 +2,7 @@
 const backendUrl = '//localhost:8080';
 
 $(document).ready(function() {
-    let header = `<header><h1>${$('title').text()}</h1>`;
+    let header = `<header><h1><a href="./">${$('title').text()}</a></h1>`;
     if(window.sessionStorage.authToken && window.sessionStorage.authToken != 'undefined') {
         header += `<span><a href="./logout">Logout</a></span>`;
         header += `<span>Logged in as ${window.sessionStorage.username}</span>`
