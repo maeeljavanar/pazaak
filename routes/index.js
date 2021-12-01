@@ -5,7 +5,9 @@ var user = require('../business/user.js');
 var game = require('../business/game.js');
 var jwt = require('jsonwebtoken');
 
-//frontend routes
+/**
+ * Frontend Routes
+ */
 router.get('/', (req, res) => {
   res.sendFile('./public/html/lobby.html', {root: config.root});
 });
@@ -26,7 +28,9 @@ router.get('/game', (req, res) => {
   res.sendFile('./public/html/game.html', {root: config.root});
 });
 
-//backend routes
+/**
+ * Backend Routes
+ */
 router.post('/createAccount', function(req, res) {
   user.createAccount(req.body.username, req.body.password, userid => {
     if(userid != undefined) {
@@ -135,6 +139,7 @@ function validateToken(token) {
     var decoded = jwt.verify(token, config.jwtSecret);
     return decoded;
   } catch(err) {
+    console.log(err);
     return false;
   }
 

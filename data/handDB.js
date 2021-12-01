@@ -34,6 +34,6 @@ exports.getCards = async function(gameid, playerid) {
 }
 
 exports.getEnemyCards = async function(gameid, playerid) {
-    let response = await database.executeQuery("SELECT COUNT(*) FROM hand_card WHERE gameid = ? AND playerid = ?", [gameid, playerid]);
+    let response = await database.executeQuery("SELECT COUNT(*) as cards FROM hand_card WHERE gameid = ? AND playerid = ?", [gameid, playerid]);
     return response[0];
 }

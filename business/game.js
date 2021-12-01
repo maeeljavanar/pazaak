@@ -79,27 +79,58 @@ exports.joinGame = async function(gameid, player2ID, callback) {
 
 exports.getStatus = async function(gameid, playerid, callback) {
 
-    let game = gameDB.getGame(gameid);
+    let gameSource = await gameDB.getGame(gameid);
 
     //error if the player is not part of this game
-    if(game.player1 != playerid && game.player2 != playerid) {
-        return {"error": "Requested game does not exist or you do not have access"};
+    if(gameSource.player1 != playerid && gameSource.player2 != playerid) {
+        callback({"error": "Requested game does not exist or you do not have access"});
+        return;
     }
 
     //get other player id
-    let enemyid;
-    if(game.player1 == playerid) {
-        enemyid = game.player2;
+    let enemyid, playername, enemyname, playerpoints, enemypoints, playerstand, enemystand;
+    if(gameSource.player1 == playerid) {
+        enemyid = gameSource.player2;
+        playername = gameSource.p1name;
+        enemyname = gameSource.p2name;
+        playerpoints = gameSource.player1_points;
+        enemypoints = gameSource.player2_points;
+        playerstand = gameSource.player1_stand;
+        enemystand = gameSource.player2_stand;
     } else {
-        enemyid = game.player1;
+        enemyid = gameSource.player1;
+        playername = gameSource.p2name;
+        enemyname = gameSource.p1name;
+        playerpoints = gameSource.player2_points;
+        enemypoints = gameSource.player1_points;
+        playerstand = gameSource.player2_stand;
+        enemystand = gameSource.player1_stand;
     }
+
+    //get user relative turn
+    let turn = gameSource.turn == playerid;
+
+    let game = {
+        "gameid": gameSource.gameid,
+        "playerid": playerid,
+        "enemyid": enemyid,
+        "playername": playername,
+        "enemyname": enemyname,
+        "turn": turn,
+        "points": playerpoints,
+        "enemypoints": enemypoints,
+        "winner": gameSource.winner,
+        "set": gameSource.set,
+        "stand": playerstand,
+        "enemystand": enemystand
+    };
 
     game.hand = await handDB.getCards(gameid, playerid);
     game.enemyHand = await handDB.getEnemyCards(gameid, enemyid);
     game.table = await tableDB.getCards(gameid, playerid);
     game.enemyTable = await tableDB.getCards(gameid, enemyid);
 
-    return {"success": true, "game": game};
+    callback({"success": true, "game": game});
 }
 
 //No real business logic, these two are just SQL queries

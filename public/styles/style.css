@@ -124,3 +124,7 @@ text {
     fill: #E5E5E5;
     font-size: 1.5em;
 }
+
+.cardNumber {
+    font-size: 100px;
+}

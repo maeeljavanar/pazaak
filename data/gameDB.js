@@ -31,7 +31,7 @@ exports.createGame = async function(player1ID, player2ID) {
 }
 
 exports.getGame = async function(gameid) {
-    let game = await database.executeQuery("SELECT gameid, player1, player2, turn, player1_points, player2_points, winner, set, player1_stand, player2_stand FROM game WHERE gameid = ?", [gameid]);
+    let game = await database.executeQuery("SELECT gameid, player1, player2, p1.username as p1name, p2.username as p2name, turn, player1_points, player2_points, winner, `set`, player1_stand, player2_stand FROM game LEFT JOIN player as p1 ON game.player1 = p1.userid LEFT JOIN player as p2 ON game.player2 = p2.userid WHERE gameid = ?", [gameid]);
     return game[0];
 
 }
