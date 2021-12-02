@@ -4,6 +4,8 @@ var router = express.Router();
 var user = require('../business/user.js');
 var game = require('../business/game.js');
 var jwt = require('jsonwebtoken');
+var chat = require('../business/chat.js');
+chat.openChat('lobby');
 
 /**
  * Frontend Routes
@@ -26,6 +28,25 @@ router.get('/login', (req, res) => {
 
 router.get('/game', (req, res) => {
   res.sendFile('./public/html/game.html', {root: config.root});
+});
+
+/**
+ * Chat routes
+ */
+router.post('/chat/', (req, res) => {
+  if(req.body.chatid) {
+    res.json(chat.getChat(req.body.chatid));
+  }
+});
+
+router.post('/chat/message', (req, res) => {
+  let requestJWT = validateToken(req.body.token);
+  if(requestJWT && req.body.chatid && req.body.message) {
+    chat.messageChat(req.body.chatid, requestJWT.name, req.body.message);
+    res.json({"success": true});
+  } else {
+    res.json({"error": "Invalid request"})
+  }
 });
 
 /**
@@ -87,6 +108,8 @@ router.post('/joinLobby', function(req, res, next) {
         });
       }
     });
+
+    chat.openChat(req.body.gameid);
   } else {
     res.json({
       "success": false,

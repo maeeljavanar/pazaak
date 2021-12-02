@@ -26,8 +26,14 @@ main {
 #rightSide {
     grid-column: 3;
     margin: auto;
-    min-width: 250px;
+    min-width: 80%;
     max-width: 500px;
+}
+
+#gameChat {
+    grid-column: 3;
+    margin: auto;
+    min-width: 80%;
 }
 
 #loginForm {
@@ -84,12 +90,14 @@ a {
 }
 
 #openGame {
-    width: 100%;
+    width: 80%;
     background-color: #5D606B;
     font-size: 2em;
     color: white;
     padding: 0.5em;
     margin-top: 2em;
+    margin-left: auto;
+    margin-right: auto;
     text-align: center;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.8);
     transition: 0.3s;
@@ -101,6 +109,29 @@ a {
 
 #openGame:active {
     box-shadow: 0 2px 4px 0 rgba(0,0,0,0.8);
+}
+
+#chat {
+    background-color: #202225;
+    width: 80%;
+    height: 500px;
+    margin: auto;
+    margin-top: 2em;
+    padding: 0.3em;
+}
+
+#messages {
+    margin: 0.5em;
+    height: 90%;
+}
+
+#messages p {
+    margin-top: 0.3em;
+    margin-bottom: 0;
+}
+
+.chatUsername {
+    color: #E67E23;
 }
 
 .left {

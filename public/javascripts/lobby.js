@@ -1,4 +1,9 @@
 $(document).ready(function() {
+
+    //chat
+    createChat('lobby');
+    setInterval(updateChat, 500);
+
     /**
      * Locked behind login
      */
@@ -20,7 +25,7 @@ $(document).ready(function() {
 
         //get user's active games
         $.post(`${backendUrl}/myGames`, {"token": window.sessionStorage.authToken}, games => {
-            console.log('GameList response returned');
+            console.log('My games response returned');
             let gamesList = '';
             games.forEach(game => {
                 gamesList += `<div class="game" id="game${game.gameid}" onclick="loadGame(${game.gameid})">`;

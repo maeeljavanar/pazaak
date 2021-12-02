@@ -10,6 +10,8 @@ const negativeCardColor = 'red';
 
 $(document).ready(function() {
 
+    createChat(gameid);
+    setInterval(updateChat, 500);
     setInterval(getGameState, 1000);
     //getGameState();
 
