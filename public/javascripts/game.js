@@ -26,6 +26,7 @@ function getGameState() {
     });
 }
 
+//this function contains the code to actually update the screen
 function updateGame(game) {
 
     //remove generated elements
@@ -33,7 +34,9 @@ function updateGame(game) {
 
     //update names
     $('#playerName').html(game.playername);
-    $('#enemyName').html(game.enemyname);
+    if(game.enemyname) {
+        $('#enemyName').html(game.enemyname);
+    }
 
     //update turn
     if(game.turn) {
@@ -65,30 +68,44 @@ function updateGame(game) {
     //update player table
     game.table.forEach((card, index) => {
         let tableSlot = $(`#playerTable${index}`);
-        createCard(tableSlot.attr('x'), tableSlot.attr('y'), card);
+        createCard(tableSlot.attr('x'), tableSlot.attr('y'), card, false);
     });
 
     //update enemy table
     game.enemyTable.forEach((card, index) => {
         let tableSlot = $(`#enemyTable${index}`);
-        createCard(tableSlot.attr('x'), tableSlot.attr('y'), card);
+        createCard(tableSlot.attr('x'), tableSlot.attr('y'), card, false);
     });
 
     //update player hand
     game.hand.forEach((card, index) => {
         let handSlot = $(`#playerHand${index}`);
-        createCard(handSlot.attr('x'), handSlot.attr('y'), card);
+        createCard(handSlot.attr('x'), handSlot.attr('y'), card, game.turn);
     });
 
     //update enemy hand
     for(let i = 0; i < game.enemyHand.cards; i++) {
         let handSlot = $(`#enemyHand${i}`);
-        createCard(handSlot.attr('x'), handSlot.attr('y'), 'u ');
+        createCard(handSlot.attr('x'), handSlot.attr('y'), 'u ', false);
     }
 
     //update count of cards on table
     $('#playerCount').html(count(game.table));
     $('#enemyCount').html(count(game.enemyTable));
+
+    //add clickables if players turn
+    if(game.turn) {
+
+        //end turn
+        createButton($('#endTurn').attr('x'), $('#endTurn').attr('y'), $('#endTurn').attr('width'), $('#endTurn').attr('height'), 'endTurn');
+
+        //stand
+        createButton($('#stand').attr('x'), $('#stand').attr('y'), $('#stand').attr('width'), $('#stand').attr('height'), 'stand');
+
+        //forfeit
+        createButton($('#forfeit').attr('x'), $('#forfeit').attr('y'), $('#forfeit').attr('width'), $('#stand').attr('height'), 'forfeit');
+
+    }
 }
 
 //Helper to count values of cards on the table
@@ -109,7 +126,21 @@ function count(table) {
     return count;
 }
 
-function createCard(x, y, code) {
+function createButton(x, y, width, height, action) {
+    let button = document.createElementNS(svgns, "rect");
+
+    button.setAttribute("x", x);
+    button.setAttribute("y", y);
+    button.setAttribute("width", width);
+    button.setAttribute("height", height);
+    button.setAttribute("onclick", `takeAction('${action}')`);
+    button.setAttribute("fill", "rgba(0, 0, 0, 0");
+
+    $("#cards").append(button);
+}
+
+//create and draw a card
+function createCard(x, y, code, playable) {
     
     //split values of the code
     let type = code.charAt(0);
@@ -119,6 +150,9 @@ function createCard(x, y, code) {
     let card = document.createElementNS(svgns, "g");
     card.setAttribute("class", "generated");
     card.setAttribute("code", code);
+    if(playable) {
+        card.setAttribute("onclick", `playCard('${code}')`);
+    }
 
     //create background
     let background = document.createElementNS(svgns, "rect");
@@ -162,4 +196,27 @@ function createCard(x, y, code) {
     $("#cards").append(card);
 
     console.log("Card added with code ", code);
+}
+
+//play card with passed code
+function playCard(code) {
+    $.post(`${backendUrl}/gameAction`, {
+        "token": window.sessionStorage.authToken, 
+        "action": 'play',
+        "gameid": gameid,
+        "card": code
+    }, response => {
+        console.log(response);
+    });
+}
+
+function takeAction(action) {
+    console.log('Action: ', action);
+    $.post(`${backendUrl}/gameAction`, {
+        "token": window.sessionStorage.authToken, 
+        "action": action,
+        "gameid": gameid
+    }, response => {
+        console.log(response);
+    });
 }

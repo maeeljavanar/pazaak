@@ -66,3 +66,71 @@ exports.getUsersGames = async function(userid) {
     
     return games;
 }
+
+exports.getTurn = async function(gameid) {
+    let turn = await database.executeQuery('SELECT turn FROM game WHERE gameid = ?', [gameid]);
+    return turn[0];
+}
+
+//shame this can't just be done as a subquery
+exports.changeTurn = async function(gameid) {
+    let newTurn = await database.executeQuery('SELECT p.userid FROM game JOIN player as p ON game.player1 = p.userid OR game.player2 = p.userid WHERE game.turn != p.userid AND game.gameid = ?', [gameid]);
+    newTurn = newTurn[0];
+    let response = await database.executeQuery('UPDATE game SET turn = ? WHERE gameid = ?', [newTurn, gameid]);
+    if(response.affectedRows == 1) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+exports.getStand = async function(gameid) {
+    let stands = await database.executeQuery('SELECT player1, player2, player1_stand, player2_stand FROM game WHERE gameid = ?', [gameid]);
+    return stands[0];
+}
+
+exports.stand = async function(gameid, playerid) {
+    let response;
+    if((await exports.getPlayer1(gameid)) == playerid) {
+        response = await database.executeQuery('UPDATE game SET player1_stand = TRUE WHERE gameid = ?', [gameid]);
+    } else {
+        response = await database.executeQuery('UPDATE game SET player2_stand = TRUE WHERE gameid = ?', [gameid]);
+    }
+    if(response.affectedRows == 1) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+exports.getEndOfSet = async function(gameid) {
+    let data = await database.executeQuery('SELECT gameid, player1, player2, set, player1_points, player2_points, set FROM game WHERE gameid = ?', [gameid]);
+    return data[0];
+}
+
+exports.updatePoints = async function(gameid, player1_points, player2_points) {
+    let response = await database.executeQuery(`UPDATE game SET player1_points = ?, player2_points WHERE gameid = ?`, [player1_points, player2_points, gameid]);
+    if(response.affectedRows == 1) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+exports.setWinner = async function(gameid, winner) {
+    let response = await database.executeQuery('UPDATE game SET winner = ?, turn = -1 WHERE gameid = ?', [winner, gameid]);
+    if(response.affectedRows == 1) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+exports.nextSet = async function(gameid, set) {
+    let response = await database.executeQuery('UPDATE game SET `set` = ? WHERE gameid = ?', [set, gameid]);
+    if(response.affectedRows == 1) {
+        return true;
+    } else {
+        return false;
+    }
+}

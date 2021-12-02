@@ -105,6 +105,29 @@ router.post('/gameStatus', function(req, res, next) {
   }
 });
 
+router.post('/gameAction', function(req, res, next) {
+  let requestJWT = validateToken(req.body.token);
+  if(req.body.action) {
+    let options = {
+      "userid": requestJWT.sub,
+      "action": req.body.action,
+      "gameid": req.body.gameid
+    }
+    if(req.body.card) {
+      options.card = req.body.card;
+    }
+    game.action(options, success => {
+      res.json({"success": success});
+    });
+
+  } else {
+    res.json({
+      "success": false,
+      "error": "Invalid request"
+    });
+  }
+});
+
 router.get('/gameList', function(req, res, next) {
   //No login required
   game.getGameList(list => {

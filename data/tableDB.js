@@ -1,8 +1,8 @@
 var database = require('./database.js');
 
-exports.createCard = async function(gameid, playerid, set, card) {
+exports.createCard = async function(gameid, playerid, card) {
     //insert into database
-    let response = await database.executeQuery("INSERT INTO table_card(gameid, playerid, `set`, card_code) VALUES(?, ?, ?, ?)", [gameid, playerid, set, card]);
+    let response = await database.executeQuery("INSERT INTO table_card(gameid, playerid, `set`, card_code) VALUES(?, ?, (SELECT `set` FROM game WHERE gameid = ?), ?)", [gameid, playerid, gameid, card]);
     console.log("Response from insert: ", response);
     if(response.affectedRows == 1) {
         return true;

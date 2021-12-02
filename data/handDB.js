@@ -37,3 +37,12 @@ exports.getEnemyCards = async function(gameid, playerid) {
     let response = await database.executeQuery("SELECT COUNT(*) as cards FROM hand_card WHERE gameid = ? AND playerid = ?", [gameid, playerid]);
     return response[0];
 }
+
+exports.clearHands = async function(gameid) {
+    let response = await database.executeQuery("DELETE FROM hand_card WHERE gameid = ?", [gameid]);
+    if(response.affectedRows == 1) {
+        return true;
+    } else {
+        return false;
+    }
+}
