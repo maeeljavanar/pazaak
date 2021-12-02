@@ -10,14 +10,13 @@ const negativeCardColor = 'red';
 
 $(document).ready(function() {
 
-    //setInterval(getGameState, 1000);
-    getGameState();
+    setInterval(getGameState, 1000);
+    //getGameState();
 
 });
 
 function getGameState() {
     $.post(`${backendUrl}/gameStatus`, {"token": window.sessionStorage.authToken, "gameid": gameid}, response => {
-        console.log(response);
         if(response.success) {
             updateGame(response.game);
         } else {
@@ -114,7 +113,7 @@ function count(table) {
 
     table.forEach(card => {
         let type = card.charAt(0);
-        let val = card.charAt(1);
+        let val = parseInt(card.charAt(1));
 
         if(type == 't' || type == 'p') {
             count += val;

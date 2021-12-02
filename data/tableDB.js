@@ -15,7 +15,7 @@ exports.removeCardBySet = async function(gameid, set) {
     //delete
     let response = await database.executeQuery("DELETE FROM table_card WHERE gameid = ? AND `set` = ?", [gameid, set]);
     console.log("Response from delete: ", response);
-    if(response.affectedRows == 1) {
+    if(response.affectedRows >= 1) {
         return true;
     } else {
         return false;

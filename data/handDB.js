@@ -13,7 +13,7 @@ exports.createCard = async function(gameid, playerid, card) {
 
 exports.removeCard = async function(gameid, playerid, card) {
     //delete
-    let response = await database.executeQuery("DELETE FROM hand_card WHERE gameid = ? AND playerid = ? AND card_code LIKE ?", [gameid, playerid, card]);
+    let response = await database.executeQuery("DELETE FROM hand_card WHERE gameid = ? AND playerid = ? AND card_code LIKE ? ORDER BY cardid LIMIT 1", [gameid, playerid, card]);
     console.log("Response from delete: ", response);
     if(response.affectedRows == 1) {
         return true;

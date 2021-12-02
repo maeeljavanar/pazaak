@@ -69,13 +69,15 @@ exports.getUsersGames = async function(userid) {
 
 exports.getTurn = async function(gameid) {
     let turn = await database.executeQuery('SELECT turn FROM game WHERE gameid = ?', [gameid]);
-    return turn[0];
+    turn = turn[0];
+    return turn.turn;
 }
 
 //shame this can't just be done as a subquery
 exports.changeTurn = async function(gameid) {
     let newTurn = await database.executeQuery('SELECT p.userid FROM game JOIN player as p ON game.player1 = p.userid OR game.player2 = p.userid WHERE game.turn != p.userid AND game.gameid = ?', [gameid]);
     newTurn = newTurn[0];
+    newTurn = newTurn.userid;
     let response = await database.executeQuery('UPDATE game SET turn = ? WHERE gameid = ?', [newTurn, gameid]);
     if(response.affectedRows == 1) {
         return true;
@@ -104,12 +106,12 @@ exports.stand = async function(gameid, playerid) {
 }
 
 exports.getEndOfSet = async function(gameid) {
-    let data = await database.executeQuery('SELECT gameid, player1, player2, set, player1_points, player2_points, set FROM game WHERE gameid = ?', [gameid]);
+    let data = await database.executeQuery('SELECT gameid, player1, player2, `set`, player1_points, player2_points FROM game WHERE gameid = ?', [gameid]);
     return data[0];
 }
 
 exports.updatePoints = async function(gameid, player1_points, player2_points) {
-    let response = await database.executeQuery(`UPDATE game SET player1_points = ?, player2_points WHERE gameid = ?`, [player1_points, player2_points, gameid]);
+    let response = await database.executeQuery(`UPDATE game SET player1_points = ?, player2_points = ? WHERE gameid = ?`, [player1_points, player2_points, gameid]);
     if(response.affectedRows == 1) {
         return true;
     } else {
@@ -127,7 +129,7 @@ exports.setWinner = async function(gameid, winner) {
 }
 
 exports.nextSet = async function(gameid, set) {
-    let response = await database.executeQuery('UPDATE game SET `set` = ? WHERE gameid = ?', [set, gameid]);
+    let response = await database.executeQuery('UPDATE game SET `set` = ?, player1_stand = 0, player2_stand = 0 WHERE gameid = ?', [set, gameid]);
     if(response.affectedRows == 1) {
         return true;
     } else {

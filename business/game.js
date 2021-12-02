@@ -21,39 +21,57 @@ async function dealHand(gameid, player) {
 }
 
 async function checkTurn(gameid, playerid) {
-    let turn = gameDB.getTurn(gameid);
+    let turn = await gameDB.getTurn(gameid);
+    console.log('Turn: ', turn);
     return turn == playerid;
 }
 
-async function endTurn(gameid, playerid, callback) {
+async function endTurn(gameid, playerid) {
+
+    //if end turn with over 20, end set
+    let count = await countTable(gameid, playerid);
+    if(count > 20) {
+        return await endSet(gameid);
+    }
 
     //check if enemy is standing or not
-    let stand = gameDB.getStand(gameid);
+    let stands = await gameDB.getStand(gameid);
+    console.log("******Stand: ", stands, ", playerid: ", playerid);
     let enemyStand;
-    if(stand.player1 = playerid) {
-        enemyStand = stand.player2_stand;
+    if(stands.player1 == playerid) {
+        enemyStand = stands.player2_stand;
     } else {
-        enemyStand = stand.player1_stand;
+        enemyStand = stands.player1_stand;
     }
+
+    console.log("*****Enemy Stand: ", enemyStand);
 
     //enemy did not stand
-    if(!enemyStand) {
-        //actually change turn
-        if(!(await gameDB.changeTurn(options.gameid))) {
-            callback(false);
-            return;
-        }
+    if(enemyStand) {
+        return await startTurn(gameid);
+    } else {
+        //start new turn
+        return await changeTurn(gameid);
     }
+    
+}
+
+async function changeTurn(gameid) {
+    //change turn
+    if(!(await gameDB.changeTurn(gameid))) {
+        return false
+    }
+    console.log("Change turn db success");
 
     //start new turn
-    callback(await startTurn(gameid));
-    
+    return await startTurn(gameid);
 }
 
 //deals a table card to the player whose turn it is
 async function startTurn(gameid) {
-    let playerid = gameDB.getTurn(gameid);
+    let playerid = await gameDB.getTurn(gameid);
     let card = 't' + random(0, 9);
+    console.log("Create card");
 
     return await tableDB.createCard(gameid, playerid, card);
 
@@ -68,19 +86,21 @@ async function stand(gameid, playerid) {
     }
 
     //check if both players are standing
-    let stands = gameDB.getStand(gameid);
+    let stands = await gameDB.getStand(gameid);
     if(stands.player1_stand && stands.player2_stand) {
         //if both players are standing, do end of set
-        return endSet(gameid);
-    }
+        return await endSet(gameid);
 
-    return true;
+    //otherwise change turn
+    } else {
+        return await changeTurn(gameid);
+    }
 
 }
 
 //forfeit the match
 async function forfeit(gameid, playerid) {
-    let game = gameDB.getEndOfSet(gameid);
+    let game = await gameDB.getEndOfSet(gameid);
     if(game.player1 == playerid) {
         game.player2_points = 3;
     } else {
@@ -95,9 +115,11 @@ async function forfeit(gameid, playerid) {
 async function endSet(gameid) {
     
     //check winner
-    let game = gameDB.getEndOfSet(gameid);
-    let p1Count = countTable(gameid, game.player1);
-    let p2Count = countTable(gameid, game.player2);
+    let game = await gameDB.getEndOfSet(gameid);
+    let p1Count = await countTable(gameid, game.player1);
+    let p2Count = await countTable(gameid, game.player2);
+
+    console.log("End of set: ", game, "P1 Value: ", p1Count, ", P2 Value: ", p2Count);
 
     if(p1Count > 20) {
         //p1 busted, p2 still under 20
@@ -117,17 +139,18 @@ async function endSet(gameid) {
         game.player2_points += 1;
     }
     //else tie and nothing happens
+    console.log("End of set after points: ", game);
 
     //update points in DB
-    gameDB.updatePoints(gameid, game.player1_points, game.player2_points);
+    await gameDB.updatePoints(gameid, game.player1_points, game.player2_points);
 
     //check if game over
     if(game.player1_points == 3 || game.player2_points == 3) {
-        return gameOver(game);
+        return await gameOver(game);
     }
 
     //reset
-    return resetGame(game);
+    return await resetGame(game);
 
 }
 
@@ -160,9 +183,10 @@ async function resetGame(game) {
     if(!(await gameDB.nextSet(game.gameid, game.set + 1))) {
         return false;
     }
-    if(!(await gameDB.changeTurn(game.gameid))) {
+    if(!(await changeTurn(game.gameid))) {
         return false;
     }
+    console.log("Change turn success");
 
     return true;
 }
@@ -172,10 +196,11 @@ async function countTable(gameid, playerid) {
     let table = await tableDB.getCards(gameid, playerid);
     table.forEach(card => {
         let type = card.charAt(0);
+        let val = parseInt(card.charAt(1));
         if(type == 't' || type == 'p') {
-            count += card.charAt(1);
+            count += val;
         } else if (type == 'n') {
-            count -= card.charAt(0);
+            count -= val;
         }
     });
     return count;
@@ -183,6 +208,8 @@ async function countTable(gameid, playerid) {
 }
 
 async function play(gameid, userid, card) {
+    console.log("Play: ", gameid, " ", userid, " ", card);
+
     //check the player actually has the card
     let validCards = await handDB.getCards(gameid, userid);
     if(await validCards.indexOf(card) == -1) {
@@ -337,6 +364,9 @@ exports.getUsersGames = async function(userid, callback) {
  * @param {*} callback 
  */
 exports.action = async function(options, callback) {
+
+    console.log("Action taken: ", options);
+
     //play a card
     if(options.action == 'play') {
 
@@ -346,17 +376,18 @@ exports.action = async function(options, callback) {
             return;
         }
 
-        callback(await play());
+        callback(await play(options.gameid, options.userid, options.card));
 
     } else if(options.action == 'endTurn') {
 
         //check that it actually is this player's turn
         if(!(await checkTurn(options.gameid, options.userid))) {
+            console.log("Check turn evaluated to false");
             callback(false);
             return;
         }
 
-        callback(await endTurn(options.gameid, options.userid, callback))
+        callback(await endTurn(options.gameid, options.userid));
         return;
 
     } else if(options.action == 'stand') {
