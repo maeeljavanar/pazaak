@@ -123,12 +123,12 @@ async function endSet(gameid) {
 
     if(p1Count > 20) {
         //p1 busted, p2 still under 20
-        if(p2Count < 20) {
+        if(p2Count <= 20) {
             game.player2_points += 1;
         }
     } else if(p2Count > 20) {
         //p2 busted, p1 still under
-        if(p1Count < 20) {
+        if(p1Count <= 20) {
             game.player1_points += 1;
         } 
     //no bust, p1 higher
