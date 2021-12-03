@@ -212,30 +212,37 @@ async function countTable(gameid, playerid) {
 
 }
 
-async function play(gameid, userid, card) {
-    console.log("Play: ", gameid, " ", userid, " ", card);
+async function play(options) {
+    console.log("Play: ", options.gameid, " ", options.userid, " ", options.card);
 
     //check the player actually has the card
-    let validCards = await handDB.getCards(gameid, userid);
-    if(await validCards.indexOf(card) == -1) {
+    let validCards = await handDB.getCards(options.gameid, options.userid);
+    if(await validCards.indexOf(options.card) == -1) {
         //card not in player hand
         return false
     }
 
     //check the table has space for the card
-    let tableCards = await tableDB.getCards(gameid, userid);
+    let tableCards = await tableDB.getCards(options.gameid, options.userid);
     if (tableCards.length >= 9) {
         return false;
     }
 
     //remove from hand
-    let success = await handDB.removeCard(gameid, userid, card);
+    let success = await handDB.removeCard(options.gameid, options.userid, options.card);
     if(!success) {
         return false;
     }
 
+    //if switch card, convert to value
+    if(options.switch) {
+        console.log("****** SWITCH CARD switch: ")
+        options.card = options.switch + options.card.charAt(1);
+        console.log("****** SWITCH CARD switch: ", options.card);
+    }
+
     //add to table
-    success = await tableDB.createCard(gameid, userid, card);
+    success = await tableDB.createCard(options.gameid, options.userid, options.card);
     if(!success) {
         //lmao card just got burned
         return false;
@@ -243,7 +250,7 @@ async function play(gameid, userid, card) {
 
     //if table is now full with this card, stand
     if(tableCards.length == 8) {
-        return await stand(gameid, userid);
+        return await stand(options.gameid, options.userid);
     }
 }
 
@@ -388,7 +395,7 @@ exports.action = async function(options, callback) {
             return;
         }
 
-        callback(await play(options.gameid, options.userid, options.card));
+        callback(await play(options));
 
     } else if(options.action == 'endTurn') {
 

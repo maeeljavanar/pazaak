@@ -139,6 +139,9 @@ router.post('/gameAction', function(req, res, next) {
     if(req.body.card) {
       options.card = req.body.card;
     }
+    if(req.body.switch) {
+      options.switch = req.body.switch;
+    }
     game.action(options, success => {
       res.json({"success": success});
     });

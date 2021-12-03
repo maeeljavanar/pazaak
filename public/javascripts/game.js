@@ -7,6 +7,7 @@ const svgns = "http://www.w3.org/2000/svg";
 const tableCardColor = 'green';
 const positiveCardColor = 'blue';
 const negativeCardColor = 'red';
+var switchVals = ['p', 'p', 'p', 'p'];
 
 $(document).ready(function() {
 
@@ -87,7 +88,7 @@ function updateGame(game) {
     //update player hand
     game.hand.forEach((card, index) => {
         let handSlot = $(`#playerHand${index}`);
-        createCard(handSlot.attr('x'), handSlot.attr('y'), card, game.turn);
+        createCard(handSlot.attr('x'), handSlot.attr('y'), card, game.turn, index);
     });
 
     //update enemy hand
@@ -152,7 +153,7 @@ function createButton(x, y, width, height, action) {
 }
 
 //create and draw a card
-function createCard(x, y, code, playable) {
+function createCard(x, y, code, playable, index) {
     
     //split values of the code
     let type = code.charAt(0);
@@ -168,11 +169,12 @@ function createCard(x, y, code, playable) {
     card.setAttribute("class", "generated");
     card.setAttribute("code", code);
     if(playable) {
-        card.setAttribute("onclick", `playCard('${code}')`);
+        card.setAttribute("onclick", `playCard('${code}', ${index})`);
     }
 
     //create background
     let background = document.createElementNS(svgns, "rect");
+    let switchBackground;
     background.setAttribute("x", x);
     background.setAttribute("y", y);
     background.setAttribute("width", cardWidth);
@@ -193,10 +195,47 @@ function createCard(x, y, code, playable) {
 
     } else if (type == 's') {
         //switch card
-        background.setAttribute("fill", "black"); //TODO switch card implementation
+        switchBackground = document.createElementNS(svgns, "rect");
+        switchBackground.setAttribute("x", x);
+        switchBackground.setAttribute("y", parseInt(y) + (parseInt(cardHeight) / 2) + 'px');
+        switchBackground.setAttribute("width", cardWidth);
+        switchBackground.setAttribute("height", (parseInt(cardHeight) / 2));
+
+        //do background colors
+        if(switchVals[index] == 'p') {
+            background.setAttribute("fill", positiveCardColor);
+            switchBackground.setAttribute("fill", negativeCardColor);
+        } else {
+            background.setAttribute("fill", negativeCardColor);
+            switchBackground.setAttribute("fill", positiveCardColor);
+        }
+
+        //add flip button
+        let flipTile = $(`#playerHandFlip${index}`);
+        
+        //text
+        let flipText = document.createElementNS(svgns, "text");
+        flipText.setAttribute("x", parseInt(flipTile.attr("x")) + 30 + 'px ');
+        flipText.setAttribute("y", parseInt(flipTile.attr("y")) + 30 + 'px' );
+        flipText.innerHTML = "Flip";
+
+        //clickable
+        let flipButton = document.createElementNS(svgns, "rect");
+        flipButton.setAttribute("x", flipTile.attr("x"));
+        flipButton.setAttribute("y", flipTile.attr("y"));
+        flipButton.setAttribute("width", flipTile.attr("width"));
+        flipButton.setAttribute("height", flipTile.attr("height"));
+        flipButton.setAttribute("onclick", `switchCard(${index})`);
+        flipButton.setAttribute("fill", "rgba(0, 0, 0, 0");
+
+        //add flip button to dom
+        $("#cards").append(flipText);
+        $("#cards").append(flipButton);
+
+
     } else if (type == 'u') {
         //unknown card in enemy hand
-        background.setAttribute("fill", "black"); //TODO switch card implementation
+        background.setAttribute("fill", "black");
     }
 
     //add number
@@ -214,6 +253,9 @@ function createCard(x, y, code, playable) {
 
 
     card.appendChild(background);
+    if(type == 's') {
+        card.appendChild(switchBackground);
+    }
     card.appendChild(number);
 
     $("#cards").append(card);
@@ -221,14 +263,28 @@ function createCard(x, y, code, playable) {
     console.log("Card added with code ", code);
 }
 
+function switchCard(index) {
+    if(switchVals[index] == 'p') {
+        switchVals[index] = 'n';
+    } else {
+        switchVals[index] = 'p';
+    }
+}
+
 //play card with passed code
-function playCard(code) {
-    $.post(`${backendUrl}/gameAction`, {
+function playCard(code, index) {
+    let data = {
         "token": window.sessionStorage.authToken, 
         "action": 'play',
         "gameid": gameid,
         "card": code
-    }, response => {
+    };
+
+    //include switch if switch card
+    if(code.charAt(0) == 's') {
+        data.switch = switchVals[index];
+    }
+    $.post(`${backendUrl}/gameAction`, data, response => {
         console.log(response);
     });
 }
