@@ -11,6 +11,10 @@ exports.openChat = function(chatid) {
 
 exports.messageChat = function(chatid, username, message) {
     let chat = exports.getChat(chatid);
+    if(!chat) {
+        exports.openChat(chatid);
+        chat = exports.getChat(chatid);
+    }
     chat.messages.push({
         "username": username,
         "message": message
@@ -21,7 +25,7 @@ exports.messageChat = function(chatid, username, message) {
 }
 
 exports.getChat = function(chatid) {
-    let response;
+    let response = false;
     chats.forEach(chat => {
         if(chat.chatid == chatid) {
             response = chat;
