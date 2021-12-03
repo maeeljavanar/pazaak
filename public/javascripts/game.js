@@ -218,6 +218,7 @@ function createCard(x, y, code, playable, index) {
         flipText.setAttribute("x", parseInt(flipTile.attr("x")) + 30 + 'px ');
         flipText.setAttribute("y", parseInt(flipTile.attr("y")) + 30 + 'px' );
         flipText.innerHTML = "Flip";
+        flipText.setAttribute("class", "generated");
 
         //clickable
         let flipButton = document.createElementNS(svgns, "rect");
@@ -227,6 +228,7 @@ function createCard(x, y, code, playable, index) {
         flipButton.setAttribute("height", flipTile.attr("height"));
         flipButton.setAttribute("onclick", `switchCard(${index})`);
         flipButton.setAttribute("fill", "rgba(0, 0, 0, 0");
+        flipButton.setAttribute("class", "generated");
 
         //add flip button to dom
         $("#cards").append(flipText);
