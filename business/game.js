@@ -273,7 +273,7 @@ exports.joinGame = async function(gameid, player2ID, callback) {
             success = await dealHand(gameid, player1ID);
 
             if(success.success) {
-                callback(gameid)
+                //callback(gameid)
 
                 //deal first card
                 success = await startTurn(gameid);
