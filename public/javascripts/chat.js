@@ -2,11 +2,14 @@ var chatid;
 
 function createChat(id) {
     chatid = id;
-    $('#chat').append(`<div id="messages"></div>
-    <div id="sendMessage">
-      <input type="text" name="message" id="message" size="30" class="left"/>
-      <button onclick="sendChat()" class="right">Send</button>
-    </div>`);
+    $('#chat').append(`<div id="messages"></div>`);
+    
+    if(window.sessionStorage.authToken && window.sessionStorage.authToken != 'undefined') {
+        $('#chat').append(`<div id="sendMessage">
+            <input type="text" name="message" id="message" size="30" class="left"/>
+            <button onclick="sendChat()" class="right">Send</button>
+        </div>`);
+    }
 }
 
 function updateChat() {
