@@ -304,7 +304,7 @@ exports.getStatus = async function(gameid, playerid, callback) {
     }
 
     //get other player id
-    let enemyid, playername, enemyname, playerpoints, enemypoints, playerstand, enemystand;
+    let enemyid, playername, enemyname, playerpoints, enemypoints, playerstand, enemystand, winner;
     if(gameSource.player1 == playerid) {
         enemyid = gameSource.player2;
         playername = gameSource.p1name;
@@ -323,6 +323,15 @@ exports.getStatus = async function(gameid, playerid, callback) {
         enemystand = gameSource.player1_stand;
     }
 
+    //get winner
+    if(gameSource.winner && gameSource.winner == enemyid) {
+        winner = enemyname;
+    } else if (gameSource.winner && gameSource.winner == playerid) {
+        winner = playername;
+    } else {
+        winner = false;
+    }
+
     //get user relative turn
     let turn = gameSource.turn == playerid;
 
@@ -335,7 +344,7 @@ exports.getStatus = async function(gameid, playerid, callback) {
         "turn": turn,
         "points": playerpoints,
         "enemypoints": enemypoints,
-        "winner": gameSource.winner,
+        "winner": winner,
         "set": gameSource.set,
         "stand": playerstand,
         "enemystand": enemystand

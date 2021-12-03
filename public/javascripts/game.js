@@ -30,6 +30,12 @@ function getGameState() {
 //this function contains the code to actually update the screen
 function updateGame(game) {
 
+    //game over
+    if(game.winner) {
+        alert(`${game.winner} has won the game!`);
+        window.location.replace('./');
+    }
+
     //remove generated elements
     $(".generated").remove();
 
