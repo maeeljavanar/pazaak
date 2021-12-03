@@ -9,6 +9,12 @@ function createChat(id) {
             <input type="text" name="message" id="message" size="30" class="left"/>
             <button onclick="sendChat()" class="right">Send</button>
         </div>`);
+
+        $("#message").keyup(function(event) {
+            if (event.keyCode === 13) {
+                sendChat();
+            }
+        });
     }
 }
 
