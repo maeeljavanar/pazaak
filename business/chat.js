@@ -1,5 +1,6 @@
 var chats = [];
-const maxSavedMessages = 10;
+const maxSavedMessages = 25;
+const messageCharLimit = 127;
 
 exports.openChat = function(chatid) {
     let chat = {
@@ -19,7 +20,7 @@ exports.messageChat = function(chatid, username, message) {
         }
         chat.messages.push({
             "username": username,
-            "message": message
+            "message": message.slice(0, messageCharLimit)
         });
         if(chat.messages.length > maxSavedMessages) {
             chat.messages.shift();

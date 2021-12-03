@@ -123,11 +123,18 @@ a {
 #messages {
     margin: 0.5em;
     height: 90%;
+    overflow-y: scroll;
+}
+
+#messages::-webkit-scrollbar {
+    display: none;
 }
 
 #messages p {
     margin-top: 0.3em;
     margin-bottom: 0;
+    overflow-wrap: break-word;
+    width: 90%;
 }
 
 #sendMessage input {
