@@ -10,18 +10,22 @@ exports.openChat = function(chatid) {
 }
 
 exports.messageChat = function(chatid, username, message) {
-    let chat = exports.getChat(chatid);
-    if(!chat) {
-        exports.openChat(chatid);
-        chat = exports.getChat(chatid);
+
+    if(validateMessage(message)) {
+        let chat = exports.getChat(chatid);
+        if(!chat) {
+            exports.openChat(chatid);
+            chat = exports.getChat(chatid);
+        }
+        chat.messages.push({
+            "username": username,
+            "message": message
+        });
+        if(chat.messages.length > maxSavedMessages) {
+            chat.messages.shift();
+        }
     }
-    chat.messages.push({
-        "username": username,
-        "message": message
-    });
-    if(chat.messages.length > maxSavedMessages) {
-        chat.messages.shift();
-    }
+    
 }
 
 exports.getChat = function(chatid) {
@@ -32,4 +36,13 @@ exports.getChat = function(chatid) {
         }
     });
     return response;
+}
+
+function validateMessage(message) {
+    //sorry to anyone who wanted to send <3 or </3 or anything like that
+    if(message.includes('<') || message.includes('>') || message.includes('&lt;') || message.includes('&gt;')) {
+        return false;
+    }
+
+    return true;
 }
