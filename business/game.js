@@ -198,7 +198,12 @@ async function countTable(gameid, playerid) {
         let type = card.charAt(0);
         let val = parseInt(card.charAt(1));
         if(type == 't' || type == 'p') {
-            count += val;
+            //t0 represents a 10 table card - there are no 0s and no hand 10s
+            if(val == 0) {
+                count += 10;
+            } else {
+                count += val;
+            }
         } else if (type == 'n') {
             count -= val;
         }
@@ -273,12 +278,10 @@ exports.joinGame = async function(gameid, player2ID, callback) {
             success = await dealHand(gameid, player1ID);
 
             if(success.success) {
-                //callback(gameid)
-
                 //deal first card
                 success = await startTurn(gameid);
                 if(success) {
-                    callback(success);
+                    callback(gameid);
                 } else {
                     callback({"error": "error dealing cards"});
                 }

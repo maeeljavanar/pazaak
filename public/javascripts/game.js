@@ -124,7 +124,12 @@ function count(table) {
         let val = parseInt(card.charAt(1));
 
         if(type == 't' || type == 'p') {
-            count += val;
+            //t0 represents a 10 table card - there are no 0s and no hand 10s
+            if(val == 0) {
+                count += 10;
+            } else {
+                count += val;
+            }
         } else if(type == 'n') {
             count -= val;
         }
@@ -152,6 +157,11 @@ function createCard(x, y, code, playable) {
     //split values of the code
     let type = code.charAt(0);
     let value = code.charAt(1);
+
+    //t0 is actually a 10
+    if(value == '0') {
+        value = '10';
+    }
 
     //create card object
     let card = document.createElementNS(svgns, "g");
@@ -192,8 +202,14 @@ function createCard(x, y, code, playable) {
     //add number
     let number = document.createElementNS(svgns, "text");
     number.setAttribute("class", "cardNumber");
-    number.setAttribute("x", (parseInt(x) + 20) + 'px');
     number.setAttribute("y", (parseInt(y) + parseInt(cardHeight) - 30) + 'px');
+    //adjust position for wider value
+    if(value == '10') {
+        number.setAttribute("x", (parseInt(x)) + 'px');
+        number.setAttribute("textLength", parseInt(cardWidth) - 5 + 'px');
+    } else {
+        number.setAttribute("x", (parseInt(x) + 20) + 'px');
+    }
     number.innerHTML = value;
 
 
