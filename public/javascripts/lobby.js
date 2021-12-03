@@ -61,9 +61,9 @@ $(document).ready(function() {
             $('#gamelist').append(gamesList);
         });
 
-        $('#myGames').append('<p>Log in to view your games</p>');
+        $('#myGames').append('<p><a href="./login">Log in to view your games</a></p>');
 
-        $('#controls').append(`<p>Log in to access lobby controls</p>`);
+        $('#controls').append(`<p><a href="./login">Log in to access lobby controls</a></p>`);
     }
 });
 
