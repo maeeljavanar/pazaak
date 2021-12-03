@@ -16,8 +16,6 @@ function connect() {
     connection.connect(function(err) {
         if (err) {
             console.error('error: ' + err.message);
-        } else {
-            console.log('Connected to the MySQL server.');
         }
     });
 
@@ -28,8 +26,6 @@ function close(connection) {
     connection.end(function(err) {
         if (err) {
             console.log('error:' + err.message);
-        } else {
-            console.log('Close the database connection.');
         }
     });
 }
@@ -48,7 +44,7 @@ exports.executeQuery = function(sql, vals) {
             connection.unprepare(sql); //close cached statement
             close(connection); //close connection
             if(rows) {
-                console.log("Response: " + JSON.stringify(rows));
+                //console.log("Response: " + JSON.stringify(rows));
                 resolve(rows);
             }
         });

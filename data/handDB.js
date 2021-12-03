@@ -27,7 +27,6 @@ exports.getCards = async function(gameid, playerid) {
     let cards = [];
     let response = await database.executeQuery("SELECT card_code FROM hand_card WHERE gameid = ? AND playerid = ?", [gameid, playerid]);
     response.forEach(row => {
-        console.log("Row: ", row);
         cards.push(row.card_code);
     });
     return cards;
