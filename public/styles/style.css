@@ -134,7 +134,7 @@ a {
     margin-top: 0.3em;
     margin-bottom: 0;
     overflow-wrap: break-word;
-    width: 90%;
+    max-width: 90%;
 }
 
 #sendMessage input {
