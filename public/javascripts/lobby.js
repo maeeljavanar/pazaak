@@ -73,7 +73,7 @@ function openGame() {
         if(response.success) {
             loadGame(response.gameid);
         } else {
-            alert("Error creatng game");
+            alert(response.error);
         }
     });
 }

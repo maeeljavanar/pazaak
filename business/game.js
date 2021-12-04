@@ -255,6 +255,14 @@ async function play(options) {
 }
 
 exports.openGame = async function(player1ID, callback) {
+
+    //limit open games
+    let existing = await gameDB.getUsersGames(player1ID);
+    if(existing.length > 1) {
+        callback({"error": "You already has open games"});
+        return;
+    }
+
     //create game, no cards dealt
     let game = await gameDB.createGame(player1ID, null);
     if(game) {
