@@ -36,16 +36,26 @@ async function endTurn(gameid, playerid) {
 
     //check if enemy is standing or not
     let stands = await gameDB.getStand(gameid);
-    let enemyStand;
+    let enemyStand, enemyid;
     if(stands.player1 == playerid) {
         enemyStand = stands.player2_stand;
+        enemyid = stands.player2;
     } else {
         enemyStand = stands.player1_stand;
+        enemyid = stands.player1;
     }
 
-    //enemy did not stand
+    //if enemy is standing, start next turn
     if(enemyStand) {
+
+        //if your count is greater than enemy count, end the set
+        if(count > await countTable(gameid, enemyid)) {
+            return await endSet(gameid);
+        }
+
         return await startTurn(gameid);
+    
+    //if enemy not standing, change turns
     } else {
         //start new turn
         return await changeTurn(gameid);
