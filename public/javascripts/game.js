@@ -217,6 +217,7 @@ function createCard(x, y, code, playable, index) {
     let card = document.createElementNS(svgns, "g");
     card.setAttribute("class", "generated");
     card.setAttribute("code", code);
+    card.setAttribute("id", `hand${index}`);
 
     //create background (and duplicate foreground so the number isn't being weird about clicks)
     let background = document.createElementNS(svgns, "rect");
@@ -332,6 +333,9 @@ function playCard(code, index) {
     $.post(`${backendUrl}/gameAction`, data, response => {
         console.log(response);
     });
+
+    //remove card from hand immediately instead of waiting for response
+    $(`#hand${index}`).remove();
 }
 
 function takeAction(action) {
