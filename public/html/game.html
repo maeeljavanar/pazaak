@@ -40,10 +40,26 @@
           <rect id="playerHand1" width="100px" height="150px" fill="#5D606B" x="155px" y="600px" />
           <rect id="playerHand2" width="100px" height="150px" fill="#5D606B" x="260px" y="600px" />
           <rect id="playerHand3" width="100px" height="150px" fill="#5D606B" x="365px" y="600px" />
-          <rect id="playerHandFlip0" width="100px" height="50px" fill="#191919" x="50px" y="755px" />
-          <rect id="playerHandFlip1" width="100px" height="50px" fill="#191919" x="155px" y="755px" />
-          <rect id="playerHandFlip2" width="100px" height="50px" fill="#191919" x="260px" y="755px" />
-          <rect id="playerHandFlip3" width="100px" height="50px" fill="#191919" x="365px" y="755px" />
+          <g id="playerHandFlip0" class="svgButton">
+            <rect width="100px" height="50px" fill="#191919" x="50px" y="755px" />
+            <text x="80px" y="785px">Flip</text>
+            <rect class="flipCover" width="100px" height="50px" fill="#191919" x="50px" y="755px" />
+          </g>
+          <g id="playerHandFlip1" class="svgButton">
+            <rect width="100px" height="50px" fill="#191919" x="155px" y="755px" />
+            <text x="180px" y="785px">Flip</text>
+            <rect class="flipCover" width="100px" height="50px" fill="#191919" x="155px" y="755px" />
+          </g>
+          <g id="playerHandFlip2" class="svgButton">
+            <rect width="100px" height="50px" fill="#191919" x="260px" y="755px" />
+            <text x="290px" y="785px">Flip</text>
+            <rect class="flipCover" width="100px" height="50px" fill="#191919" x="260px" y="755px" />
+          </g>
+          <g id="playerHandFlip3" class="svgButton">
+            <rect width="100px" height="50px" fill="#191919" x="365px" y="755px" />
+            <text x="390px" y="785px">Flip</text>
+            <rect class="flipCover" width="100px" height="50px" fill="#191919" x="365px" y="755px" />
+          </g>
         </g>
       </g>
 
@@ -80,12 +96,22 @@
         </g>
 
         <g id="controls">
-          <rect id="endTurn" class="svgButton" width="205px" height="67px" x="635px" y="755px" fill="#191919" rx="10px" ry="10px"></rect>
-          <rect id="stand" class="svgButton" width="205px" height="67px" x="845px" y="755px" fill="#191919" rx="10px" ry="10px"></rect>
-          <rect id="forfeit" class="svgButton" width="415px" height="67px" x="635px" y="828px" fill="#191919" rx="10px" ry="10px"></rect>
-          <text x="680px" y="795px">End Turn</text>
-          <text x="910px" y="795px">Stand</text>
-          <text x="800px" y="870px">Forfeit Game</text>
+          <g id="endTurn" class="svgButton">
+            <rect width="205px" height="67px" x="635px" y="755px" fill="#191919" rx="10px" ry="10px"></rect>
+            <text x="680px" y="795px">End Turn</text>
+            <rect width="205px" height="67px" x="845px" y="755px" fill="rgba(0, 0, 0, 0)" rx="10px" ry="10px"></rect>
+          </g>
+          <g id="stand" class="svgButton">
+            <rect width="205px" height="67px" x="845px" y="755px" fill="#191919" rx="10px" ry="10px"></rect>
+            <text x="910px" y="795px">Stand</text>
+            <rect width="205px" height="67px" x="845px" y="755px" fill="rgba(0, 0, 0, 0)" rx="10px" ry="10px"></rect>
+          </g>
+          <g id="forfeit"class="svgButton">
+            <rect width="415px" height="67px" x="635px" y="828px" fill="#191919" rx="10px" ry="10px"></rect>
+            <text x="770px" y="870px">Forfeit Game</text>
+            <rect width="415px" height="67px" x="635px" y="828px" fill="rgba(0, 0, 0, 0)" rx="10px" ry="10px"></rect>
+          </g>
+          
         </g>
 
       </g>

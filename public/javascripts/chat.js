@@ -20,12 +20,16 @@ function createChat(id) {
 
 function updateChat() {
     $.post(`${backendUrl}/chat/`, {"chatid": chatid}, chat => {
-        $('#messages').children().remove();
 
-        chat.messages.forEach(chatMessage => {
-            let message = `<p><span class="chatUsername">${chatMessage.username}:</span> ${chatMessage.message}</p>`;
-            $('#messages').append(message);
-        });
+        if(chat) {
+            $('#messages').children().remove();
+
+            chat.messages.forEach(chatMessage => {
+                let message = `<p><span class="chatUsername">${chatMessage.username}:</span> ${chatMessage.message}</p>`;
+                $('#messages').append(message);
+            });
+        }
+        
     });
 }
 

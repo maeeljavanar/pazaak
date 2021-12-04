@@ -13,7 +13,7 @@ $(document).ready(function() {
 
     createChat(gameid);
     setInterval(updateChat, 500);
-    setInterval(getGameState, 1000);
+    setInterval(getGameState, 200);
     //getGameState();
 
 });
@@ -110,14 +110,24 @@ function updateGame(game) {
     if(game.turn) {
 
         //end turn
-        createButton($('#endTurn').attr('x'), $('#endTurn').attr('y'), $('#endTurn').attr('width'), $('#endTurn').attr('height'), 'endTurn');
+        setClickable('endTurn');
 
         //stand
-        createButton($('#stand').attr('x'), $('#stand').attr('y'), $('#stand').attr('width'), $('#stand').attr('height'), 'stand');
+        setClickable('stand');
 
         //forfeit
-        createButton($('#forfeit').attr('x'), $('#forfeit').attr('y'), $('#forfeit').attr('width'), $('#stand').attr('height'), 'forfeit');
+        setClickable('forfeit');
 
+    //otherwise make unclickable
+    } else {
+        //end turn
+        setUnclickable('endTurn');
+
+        //stand
+        setUnclickable('stand');
+
+        //forfeit
+        setUnclickable('forfeit');
     }
 }
 
@@ -144,17 +154,12 @@ function count(table) {
     return count;
 }
 
-function createButton(x, y, width, height, action) {
-    let button = document.createElementNS(svgns, "rect");
+function setClickable(action) {
+    $(`#${action}`).attr("onclick", `takeAction('${action}')`);
+}
 
-    button.setAttribute("x", x);
-    button.setAttribute("y", y);
-    button.setAttribute("width", width);
-    button.setAttribute("height", height);
-    button.setAttribute("onclick", `takeAction('${action}')`);
-    button.setAttribute("fill", "rgba(0, 0, 0, 0");
-
-    $("#cards").append(button);
+function setUnclickable(action) {
+    $(`#${action}`).attr("onclick", '');
 }
 
 //create and draw a card
@@ -177,13 +182,20 @@ function createCard(x, y, code, playable, index) {
         card.setAttribute("onclick", `playCard('${code}', ${index})`);
     }
 
-    //create background
+    //create background (and duplicate foreground so the number isn't being weird about clicks)
     let background = document.createElementNS(svgns, "rect");
     let switchBackground;
     background.setAttribute("x", x);
     background.setAttribute("y", y);
     background.setAttribute("width", cardWidth);
     background.setAttribute("height", cardHeight);
+
+    let foreground = document.createElementNS(svgns, "rect");
+    foreground.setAttribute("x", x);
+    foreground.setAttribute("y", y);
+    foreground.setAttribute("width", cardWidth);
+    foreground.setAttribute("height", cardHeight);
+    foreground.setAttribute("fill", "rgba(0, 0, 0, 0)");
 
     //card type specifics
     if(type == 't') {
@@ -198,7 +210,13 @@ function createCard(x, y, code, playable, index) {
         //negative hand card
         background.setAttribute("fill", negativeCardColor);
 
-    } else if (type == 's') {
+    } else if (type == 'u') {
+        //unknown card in enemy hand
+        background.setAttribute("fill", "black");
+    }
+
+    //switch cards
+    if (type == 's') {
         //switch card
         switchBackground = document.createElementNS(svgns, "rect");
         switchBackground.setAttribute("x", x);
@@ -216,33 +234,12 @@ function createCard(x, y, code, playable, index) {
         }
 
         //add flip button
-        let flipTile = $(`#playerHandFlip${index}`);
-        
-        //text
-        let flipText = document.createElementNS(svgns, "text");
-        flipText.setAttribute("x", parseInt(flipTile.attr("x")) + 30 + 'px ');
-        flipText.setAttribute("y", parseInt(flipTile.attr("y")) + 30 + 'px' );
-        flipText.innerHTML = "Flip";
-        flipText.setAttribute("class", "generated");
+        $(`#playerHandFlip${index}`).attr("onclick", `switchCard(${index})`);
+        $(`#playerHandFlip${index} .flipCover`).attr("fill", "rgba(0, 0, 0, 0)");
 
-        //clickable
-        let flipButton = document.createElementNS(svgns, "rect");
-        flipButton.setAttribute("x", flipTile.attr("x"));
-        flipButton.setAttribute("y", flipTile.attr("y"));
-        flipButton.setAttribute("width", flipTile.attr("width"));
-        flipButton.setAttribute("height", flipTile.attr("height"));
-        flipButton.setAttribute("onclick", `switchCard(${index})`);
-        flipButton.setAttribute("fill", "rgba(0, 0, 0, 0");
-        flipButton.setAttribute("class", "generated");
-
-        //add flip button to dom
-        $("#cards").append(flipText);
-        $("#cards").append(flipButton);
-
-
-    } else if (type == 'u') {
-        //unknown card in enemy hand
-        background.setAttribute("fill", "black");
+    } else {
+        $(`#playerHandFlip${index}`).attr("onclick", '');
+        $(`#playerHandFlip${index} .flipCover`).attr("fill", "#191919");
     }
 
     //add number
@@ -264,10 +261,10 @@ function createCard(x, y, code, playable, index) {
         card.appendChild(switchBackground);
     }
     card.appendChild(number);
+    card.appendChild(foreground);
 
     $("#cards").append(card);
 
-    console.log("Card added with code ", code);
 }
 
 function switchCard(index) {

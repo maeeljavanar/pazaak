@@ -182,3 +182,13 @@ text {
 .cardNumber {
     font-size: 100px;
 }
+
+.svgButton {
+    transition: 0.5s;
+    color: yellow;
+}
+
+.svgButton:hover {
+    transform: translate();
+    color: red;
+}
