@@ -270,7 +270,7 @@ function createCard(x, y, code, playable, index) {
     card.appendChild(foreground);
 
     if(playable) {
-        $(`#playerHand${index}`).attr("onclick", "`playCard('${code}', ${index})`");
+        $(`#playerHand${index}`).attr("onclick", `playCard('${code}', ${index})`);
         $(`#playerHand${index}`).append(card);
     } else {
         $("#cards").append(card);

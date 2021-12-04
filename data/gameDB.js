@@ -80,7 +80,7 @@ exports.changeTurn = async function(gameid) {
     newTurn = newTurn.userid;
     let response = await database.executeQuery('UPDATE game SET turn = ? WHERE gameid = ?', [newTurn, gameid]);
     if(response.affectedRows == 1) {
-        return true;
+        return newTurn;
     } else {
         return false;
     }

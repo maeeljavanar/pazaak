@@ -36,15 +36,12 @@ async function endTurn(gameid, playerid) {
 
     //check if enemy is standing or not
     let stands = await gameDB.getStand(gameid);
-    console.log("******Stand: ", stands, ", playerid: ", playerid);
     let enemyStand;
     if(stands.player1 == playerid) {
         enemyStand = stands.player2_stand;
     } else {
         enemyStand = stands.player1_stand;
     }
-
-    console.log("*****Enemy Stand: ", enemyStand);
 
     //enemy did not stand
     if(enemyStand) {
@@ -58,7 +55,8 @@ async function endTurn(gameid, playerid) {
 
 async function changeTurn(gameid) {
     //change turn
-    if(!(await gameDB.changeTurn(gameid))) {
+    let turn = await gameDB.changeTurn(gameid);
+    if(!turn) {
         return false
     }
     console.log("Change turn db success");
@@ -73,7 +71,20 @@ async function startTurn(gameid) {
     let card = 't' + random(0, 9);
     console.log("Create card");
 
-    return await tableDB.createCard(gameid, playerid, card);
+    let success = await tableDB.createCard(gameid, playerid, card);
+    
+    if(success) {
+
+        //if at 20, auto stand
+        if(await countTable(gameid, playerid) == 20) {
+            return await stand(gameid, playerid);
+        } else {
+            return true;
+        }
+
+    } else {
+        return false;
+    }
 
 }
 
@@ -93,7 +104,7 @@ async function stand(gameid, playerid) {
 
     //otherwise change turn
     } else {
-        return await changeTurn(gameid);
+        return await changeTurn(gameid, playerid);
     }
 
 }
@@ -241,9 +252,7 @@ async function play(options) {
 
     //if switch card, convert to value
     if(options.switch) {
-        console.log("****** SWITCH CARD switch: ")
         options.card = options.switch + options.card.charAt(1);
-        console.log("****** SWITCH CARD switch: ", options.card);
     }
 
     //add to table
@@ -255,6 +264,11 @@ async function play(options) {
 
     //if table is now full with this card, stand
     if(tableCards.length == 8) {
+        return await stand(options.gameid, options.userid);
+    }
+
+    //if at 20, auto stand
+    if(await countTable(options.gameid, options.userid) == 20) {
         return await stand(options.gameid, options.userid);
     }
 }
