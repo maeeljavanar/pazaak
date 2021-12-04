@@ -89,6 +89,36 @@ function updateGame(game) {
         let tableSlot = $(`#enemyTable${index}`);
         createCard(tableSlot.attr('x'), tableSlot.attr('y'), card, false);
     });
+   
+    //grey out table if player standing
+    if(game.stand) {
+        for(let i = 0; i < 9; i++) {
+            let greyCover = document.createElementNS(svgns, "rect");
+            let slot = $(`#playerTable${i}`);
+            greyCover.setAttribute("fill", "rgba(0, 0, 0, 0.6)");
+            greyCover.setAttribute("x", slot.attr("x"));
+            greyCover.setAttribute("y", slot.attr("y"));
+            greyCover.setAttribute("width", slot.attr("width"));
+            greyCover.setAttribute("height", slot.attr("height"));
+            greyCover.setAttribute("class", "generated");
+            $("#cards").append(greyCover);
+        }
+    }
+
+    //grey out table if enemy standing
+    if(game.enemystand) {
+        for(let i = 0; i < 9; i++) {
+            let greyCover = document.createElementNS(svgns, "rect");
+            let slot = $(`#enemyTable${i}`);
+            greyCover.setAttribute("fill", "rgba(0, 0, 0, 0.6)");
+            greyCover.setAttribute("x", slot.attr("x"));
+            greyCover.setAttribute("y", slot.attr("y"));
+            greyCover.setAttribute("width", slot.attr("width"));
+            greyCover.setAttribute("height", slot.attr("height"));
+            greyCover.setAttribute("class", "generated");
+            $("#cards").append(greyCover);
+        }
+    }
 
     //update player hand
     game.hand.forEach((card, index) => {
