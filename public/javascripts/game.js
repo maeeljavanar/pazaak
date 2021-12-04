@@ -92,9 +92,16 @@ function updateGame(game) {
 
     //update player hand
     game.hand.forEach((card, index) => {
-        let handSlot = $(`#playerHand${index}`);
+        let handSlot = $(`#playerHandSlot${index}`);
         createCard(handSlot.attr('x'), handSlot.attr('y'), card, game.turn, index);
     });
+
+    if(game.hand.length < 4) {
+        for(let i = 3; i > 0 && i >= game.hand.length; i--) {
+            $(`#playerHandFlip${i}`).attr("onclick", '');
+            $(`#playerHandFlip${i} .flipCover`).attr("fill", "#191919");
+        }
+    }
 
     //update enemy hand
     for(let i = 0; i < game.enemyHand.cards; i++) {
@@ -178,9 +185,6 @@ function createCard(x, y, code, playable, index) {
     let card = document.createElementNS(svgns, "g");
     card.setAttribute("class", "generated");
     card.setAttribute("code", code);
-    if(playable) {
-        card.setAttribute("onclick", `playCard('${code}', ${index})`);
-    }
 
     //create background (and duplicate foreground so the number isn't being weird about clicks)
     let background = document.createElementNS(svgns, "rect");
@@ -263,7 +267,12 @@ function createCard(x, y, code, playable, index) {
     card.appendChild(number);
     card.appendChild(foreground);
 
-    $("#cards").append(card);
+    if(playable) {
+        $(`#playerHand${index}`).attr("onclick", "`playCard('${code}', ${index})`");
+        $(`#playerHand${index}`).append(card);
+    } else {
+        $("#cards").append(card);
+    }
 
 }
 
