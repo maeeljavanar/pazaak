@@ -288,7 +288,7 @@ exports.openGame = async function(player1ID, callback) {
     //limit open games
     let existing = await gameDB.getUsersGames(player1ID);
     if(existing.length > 1) {
-        callback({"error": "You already has open games"});
+        callback({"error": "You already have open games"});
         return;
     }
 
