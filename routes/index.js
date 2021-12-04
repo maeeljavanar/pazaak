@@ -161,6 +161,13 @@ router.get('/gameList', function(req, res, next) {
   });
 });
 
+router.post('/gameList', function(req, res, next) {
+  let requestJWT = validateToken(req.body.token);
+  game.getOpenGamesUser(requestJWT.sub, list => {
+    res.json(list);
+  })
+})
+
 router.post('/myGames', function(req, res, next) {
   let requestJWT = validateToken(req.body.token);
   game.getUsersGames(requestJWT.sub, list => {

@@ -414,6 +414,10 @@ exports.getUsersGames = async function(userid, callback) {
     callback(await gameDB.getUsersGames(userid))
 }
 
+exports.getOpenGamesUser = async function(userid, callback) {
+    callback(await gameDB.getOpenGamesUser(userid));
+}
+
 /**
  * Perform player action
  * @param {userid, gameid, action, ?card} options 

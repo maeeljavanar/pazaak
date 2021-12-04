@@ -11,7 +11,7 @@ $(document).ready(function() {
     if(window.sessionStorage.authToken && window.sessionStorage.authToken != 'undefined') {
 
         //open games with joining
-        $.getJSON(`${backendUrl}/gameList`, games => {
+        $.post(`${backendUrl}/gameList`, {"token": window.sessionStorage.authToken}, games => {
             console.log('GameList response returned');
             let gamesList = '';
             games.forEach(game => {

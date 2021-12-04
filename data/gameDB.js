@@ -67,6 +67,12 @@ exports.getUsersGames = async function(userid) {
     return games;
 }
 
+exports.getOpenGamesUser = async function(userid) {
+    let games = await database.executeQuery('SELECT game.gameid, player.userid as hostid, player.username as hostuser FROM game LEFT JOIN player ON game.player1 = player.userid WHERE game.player2 IS NULL AND game.player1 != ?', [userid]);
+
+    return games;
+}
+
 exports.getTurn = async function(gameid) {
     let turn = await database.executeQuery('SELECT turn FROM game WHERE gameid = ?', [gameid]);
     turn = turn[0];
