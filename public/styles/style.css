@@ -185,10 +185,17 @@ text {
 
 .svgButton {
     transition: 0.5s;
-    color: yellow;
 }
 
 .svgButton:hover {
-    transform: translate();
+    transform: translate(-2px, -2px);
     color: red;
+}
+
+.svgButton:active {
+    transform: translate(2px, 2px);
+}
+
+.disabledSvgButton text {
+    fill: grey;
 }

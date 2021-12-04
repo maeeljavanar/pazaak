@@ -163,10 +163,12 @@ function count(table) {
 
 function setClickable(action) {
     $(`#${action}`).attr("onclick", `takeAction('${action}')`);
+    $(`#${action}`).attr("class", "svgButton");
 }
 
 function setUnclickable(action) {
     $(`#${action}`).attr("onclick", '');
+    $(`#${action}`).attr("class", "disabledSvgButton");
 }
 
 //create and draw a card
