@@ -1,3 +1,10 @@
+$(document).ready(function() {
+    //redirect if logged in already
+    if(window.sessionStorage.authToken && window.sessionStorage.authToken != 'undefined') {
+        window.location.replace('./');
+    }
+});
+
 function register() {
     let username = $("#username").val();
     let password = $("#password").val();
