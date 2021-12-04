@@ -101,6 +101,11 @@ async function stand(gameid, playerid) {
 //forfeit the match
 async function forfeit(gameid, playerid) {
     let game = await gameDB.getEndOfSet(gameid);
+
+    if(!game.player2) {
+        return await gameDB.deleteGame(gameid);
+    }
+
     if(game.player1 == playerid) {
         game.player2_points = 3;
     } else {
@@ -316,8 +321,8 @@ exports.getStatus = async function(gameid, playerid, callback) {
     let gameSource = await gameDB.getGame(gameid);
 
     //error if the player is not part of this game
-    if(gameSource.player1 != playerid && gameSource.player2 != playerid) {
-        callback({"error": "Requested game does not exist or you do not have access"});
+    if(!gameSource || (gameSource.player1 != playerid && gameSource.player2 != playerid)) {
+        callback({"error": "Requested game does not exist or you do not have access", "code": "gdne"});
         return;
     }
 

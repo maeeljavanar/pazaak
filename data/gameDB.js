@@ -136,3 +136,12 @@ exports.nextSet = async function(gameid, set) {
         return false;
     }
 }
+
+exports.deleteGame = async function(gameid) {
+    let response = await database.executeQuery('DELETE FROM game WHERE gameid = ?', [gameid]);
+    if(response.affectedRows == 1) {
+        return true;
+    } else {
+        return false;
+    }
+}

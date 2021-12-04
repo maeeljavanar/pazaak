@@ -23,7 +23,12 @@ function getGameState() {
         if(response.success) {
             updateGame(response.game);
         } else {
-            alert("Error updating game");
+            if(response.code && response.code == 'gdne') {
+                window.location.replace('./');
+            } else {
+                alert(game.error);
+            }
+            
         }
     });
 }
