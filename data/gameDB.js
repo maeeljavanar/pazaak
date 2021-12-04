@@ -6,7 +6,7 @@ exports.createGame = async function(player1ID, player2ID) {
     gameid = gameid[0].id;
     console.log('Max id already present: ', gameid);
     if(gameid == null) {
-        gameid = 0;
+        gameid = 1;
     } else {
         gameid += 1;
     }

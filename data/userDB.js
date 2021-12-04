@@ -17,7 +17,7 @@ exports.createAccount = async function(username, password) {
     userid = userid[0].id;
     console.log('Max id already present: ', userid);
     if(userid == null) {
-        userid = 0;
+        userid = 1;
     } else {
         userid += 1;
     }
