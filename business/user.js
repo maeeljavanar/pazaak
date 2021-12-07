@@ -17,11 +17,15 @@ async function verifyPassword(storedHash, password, username, callback) {
 
 exports.login = function(username, password, callback) {
 
-    userdb.getPasswordHash(username).then(storedHash => {
+    if(username && password) {
+        userdb.getPasswordHash(username).then(storedHash => {
 
-        verifyPassword(storedHash, password, username, callback)
-
-    }); //getPassword
+            verifyPassword(storedHash, password, username, callback)
+    
+        }); //getPassword
+    } else {
+        callback(false);
+    }
 
 } //login
 
