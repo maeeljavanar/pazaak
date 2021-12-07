@@ -5,7 +5,7 @@ const messageCharLimit = 127;
 exports.openChat = function(chatid) {
     let chat = {
         "chatid": chatid,
-        "messages": [{"username": "server", "message": `Welcome to chat ${chatid}!`}]
+        "messages": [{"username": "server", "message": `Welcome to ${(chatid == 'lobby') ? 'lobby' : 'game'} chat!`}]
     };
     chats.push(chat);
 }
