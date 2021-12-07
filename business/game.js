@@ -77,10 +77,10 @@ async function changeTurn(gameid) {
 
 //deals a table card to the player whose turn it is
 async function startTurn(gameid) {
+
+    //deal card
     let playerid = await gameDB.getTurn(gameid);
     let card = 't' + random(0, 9);
-    console.log("Create card");
-
     let success = await tableDB.createCard(gameid, playerid, card);
     
     if(success) {
@@ -123,10 +123,12 @@ async function stand(gameid, playerid) {
 async function forfeit(gameid, playerid) {
     let game = await gameDB.getEndOfSet(gameid);
 
+    //if no second player ever joined, delete the game
     if(!game.player2) {
         return await gameDB.deleteGame(gameid);
     }
 
+    //forfeit by giving the other player 3 points
     if(game.player1 == playerid) {
         game.player2_points = 3;
     } else {
@@ -144,8 +146,6 @@ async function endSet(gameid) {
     let game = await gameDB.getEndOfSet(gameid);
     let p1Count = await countTable(gameid, game.player1);
     let p2Count = await countTable(gameid, game.player2);
-
-    console.log("End of set: ", game, "P1 Value: ", p1Count, ", P2 Value: ", p2Count);
 
     if(p1Count > 20) {
         //p1 busted, p2 still under 20
@@ -181,6 +181,7 @@ async function endSet(gameid) {
 }
 
 async function gameOver(game) {
+    //Check the winner
     let winner;
     if(game.player1_points == 3) {
         winner = game.player1;
@@ -188,12 +189,17 @@ async function gameOver(game) {
         winner = game.player2;
     }
 
+    //update winner in game
     if(!(await gameDB.setWinner(game.gameid, winner))) {
         return false;
     }
+
+    //remove hands for this match
     if(!(await handDB.clearHands(game.gameid))) {
         return false;
     }
+
+    //remove cards from the table for the finished set
     if(!(await tableDB.removeCardBySet(game.gameid, game.set))) {
         return false;
     }
@@ -203,16 +209,18 @@ async function gameOver(game) {
 
 
 async function resetGame(game) {
+    //remove all cards from the table for the finished set
     if(!(await tableDB.removeCardBySet(game.gameid, game.set))) {
         return false;
     }
+    //move the game to the next set
     if(!(await gameDB.nextSet(game.gameid, game.set + 1))) {
         return false;
     }
+    //change turns
     if(!(await changeTurn(game.gameid))) {
         return false;
     }
-    console.log("Change turn success");
 
     return true;
 }
@@ -224,7 +232,7 @@ async function countTable(gameid, playerid) {
         let type = card.charAt(0);
         let val = parseInt(card.charAt(1));
         if(type == 't' || type == 'p') {
-            //t0 represents a 10 table card - there are no 0s and no hand 10s
+            //t0 represents a 10 table card - there are no 0s and no negative 10s
             if(val == 0) {
                 count += 10;
             } else {
@@ -350,24 +358,26 @@ exports.getStatus = async function(gameid, playerid, callback) {
         return;
     }
 
-    //get other player id
+    //Assign values relative to the player asking for status
     let enemyid, playername, enemyname, playerpoints, enemypoints, playerstand, enemystand, winner;
     if(gameSource.player1 == playerid) {
         enemyid = gameSource.player2;
-        playername = gameSource.p1name;
         enemyname = gameSource.p2name;
-        playerpoints = gameSource.player1_points;
         enemypoints = gameSource.player2_points;
-        playerstand = gameSource.player1_stand;
         enemystand = gameSource.player2_stand;
+
+        playername = gameSource.p1name;
+        playerpoints = gameSource.player1_points;
+        playerstand = gameSource.player1_stand;
     } else {
         enemyid = gameSource.player1;
-        playername = gameSource.p2name;
         enemyname = gameSource.p1name;
-        playerpoints = gameSource.player2_points;
         enemypoints = gameSource.player1_points;
-        playerstand = gameSource.player2_stand;
         enemystand = gameSource.player1_stand;
+
+        playername = gameSource.p2name;
+        playerpoints = gameSource.player2_points;
+        playerstand = gameSource.player2_stand;
     }
 
     //get winner
@@ -397,6 +407,7 @@ exports.getStatus = async function(gameid, playerid, callback) {
         "enemystand": enemystand
     };
 
+    //get all the cards
     game.hand = await handDB.getCards(gameid, playerid);
     game.enemyHand = await handDB.getEnemyCards(gameid, enemyid);
     game.table = await tableDB.getCards(gameid, playerid);
@@ -405,7 +416,7 @@ exports.getStatus = async function(gameid, playerid, callback) {
     callback({"success": true, "game": game});
 }
 
-//No real business logic, these two are just SQL queries
+//No real business logic, these are just SQL queries
 exports.getGameList = async function(callback) {
     callback(await gameDB.getGameList());
 }
