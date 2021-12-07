@@ -23,6 +23,36 @@ main {
     grid-column: 2;
 }
 
+#content {
+    max-width: 1000px;
+    margin: auto;
+    margin-bottom: 16em;
+    grid-column: 2;
+}
+
+#content h2, #content h1 {
+    text-align: center;
+    margin: auto;
+}
+
+#content p {
+    text-indent: 2em;
+}
+
+#content li p {
+    text-indent: 0;
+}
+
+img {
+    margin: auto;
+    display: block;
+}
+
+.quote {
+    font-style: italic;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 #rightSide {
     grid-column: 3;
     margin: auto;

@@ -10,7 +10,7 @@ $(document).ready(function() {
         header += `<span><a href="./signup">Sign Up</a></span>`;
         header += `<span><a href="./login">Login</a></span>`;
     }
-    header += `</header>`;
+    header += `<span><a href="./howtoplay">How To Play</a></span></header>`;
 
     $("body").prepend(header);
 });

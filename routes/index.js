@@ -30,6 +30,10 @@ router.get('/game', (req, res) => {
   res.sendFile('./public/html/game.html', {root: config.root});
 });
 
+router.get('/howtoplay', (req, res) => {
+  res.sendFile('./public/html/howtoplay.html', {root: config.root});
+});
+
 /**
  * Chat routes
  */
