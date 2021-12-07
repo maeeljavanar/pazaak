@@ -29,7 +29,7 @@ $(document).ready(function() {
             let gamesList = '';
             games.forEach(game => {
                 gamesList += `<div class="game" id="game${game.gameid}" onclick="loadGame(${game.gameid})">`;
-                gamesList += `<pre><p id="host${game.hostid}">Host: ${game.hostuser}\t\t\t\tGuest: ${game.guestuser}</p></pre>`;
+                gamesList += `<pre><p id="host${game.hostid}">Host: ${game.hostuser}\t\t\t\tGuest: ${(game.guestuser)?game.guestuser : 'Open'}</p></pre>`;
                 gamesList += `</div>`;
             });
 
