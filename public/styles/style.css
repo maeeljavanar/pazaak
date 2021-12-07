@@ -150,6 +150,12 @@ a {
     padding: 0.3em;
 }
 
+#controls p {
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+}
+
 #messages {
     margin: 0.5em;
     height: 90%;
