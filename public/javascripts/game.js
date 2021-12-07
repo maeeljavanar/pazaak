@@ -130,7 +130,10 @@ function updateGame(game) {
     if(game.hand.length < 4) {
         for(let i = 3; i > 0 && i >= game.hand.length; i--) {
             $(`#playerHandFlip${i}`).attr("onclick", '');
+            $(`#playerHandFlip${i}`).attr("class", '');
             $(`#playerHandFlip${i} .flipCover`).attr("fill", "#191919");
+            $(`#playerHand${i}`).attr("onclick", '');
+            $(`#playerHand${i}`).attr("class", '');
         }
     }
 
@@ -274,9 +277,11 @@ function createCard(x, y, code, playable, index) {
         //add flip button
         $(`#playerHandFlip${index}`).attr("onclick", `switchCard(${index})`);
         $(`#playerHandFlip${index} .flipCover`).attr("fill", "rgba(0, 0, 0, 0)");
+        $(`#playerHandFlip${index}`).attr("class", 'svgButton');
 
     } else {
         $(`#playerHandFlip${index}`).attr("onclick", '');
+        $(`#playerHandFlip${index}`).attr("class", '');
         $(`#playerHandFlip${index} .flipCover`).attr("fill", "#191919");
     }
 
@@ -303,7 +308,8 @@ function createCard(x, y, code, playable, index) {
 
     if(playable) {
         $(`#playerHand${index}`).attr("onclick", `playCard('${code}', ${index})`);
-        $(`#playerHand${index}`).append(card);
+        $(`#playerHand${index}`).attr("class", "svgButton");
+        $(`#handCard${index}`).append(card);
     } else {
         $("#cards").append(card);
     }
@@ -320,6 +326,9 @@ function switchCard(index) {
 
 //play card with passed code
 function playCard(code, index) {
+
+    console.log("Play card ", code, " from index ", index);
+
     let data = {
         "token": window.sessionStorage.authToken, 
         "action": 'play',
