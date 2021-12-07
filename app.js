@@ -5,6 +5,9 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const config = require('./config.json');
 var cors = require('cors');
+var https = require('https');
+var http = require('http');
+const fs = require('fs');
 
 var indexRouter = require('./routes/index');
 
@@ -34,8 +37,29 @@ app.use(function(err, req, res, next) {
   res.sendFile('./public/html/error.html', {root: config.root});
 });
 
-app.listen(config.port, () => {
-  console.log(`Pazaak listening at http://localhost:${config.port}`)
-});
+//HTTPS if ssl is set in config
+if(config.sslCertificate && config.sslKey) {
+  var privateKey = fs.readFileSync(config.sslKey);
+  var certificate = fs.readFileSync(config.sslCertificate);
+
+  var sslOptions = {
+    key: privateKey,
+    cert: certificate,
+  }
+
+  if(config.sslKeyphrase) {
+    sslOptions.passphrase = config.sslKeyphrase;
+  }
+
+  https.createServer({sslOptions}, app).listen(config.port, () => {
+    console.log(`Pazaak listening at https://localhost:${config.port}`)
+  });
+
+//otherwise fallback to http
+} else {
+  http.createServer(app).listen(config.port, () => {
+    console.log(`Pazaak listening at http://localhost:${config.port}`)
+  });
+}
 
 module.exports = app;
