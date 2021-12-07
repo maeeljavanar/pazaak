@@ -69,7 +69,7 @@ router.post('/createAccount', function(req, res) {
 
 router.post('/login', function(req, res, next) {
   user.login(req.body.username, req.body.password, userid => {
-    if(userid != undefined) {
+    if(userid) {
       var token = generateToken(req, userid);
       res.json({"success": true, "token": token});
     } else {

@@ -3,7 +3,11 @@ var database = require('./database.js');
 
 exports.getPasswordHash = async function(username) {
     var hash = await database.executeQuery("SELECT password FROM player WHERE username = ?", [username]);
-    return hash[0].password;
+    if(hash.length == 1) {
+        return hash[0].password;
+    } else {
+        return false;
+    }
 }
 
 exports.getId = async function(username) {

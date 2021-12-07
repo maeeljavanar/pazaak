@@ -15,6 +15,8 @@ function register() {
             let token = parseJwt(response.token);
             window.sessionStorage.username = token.name;
             window.location.replace('./');
+        } else {
+            $("#error").html("Invalid login");
         }
     });
 }

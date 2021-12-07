@@ -246,3 +246,8 @@ text {
 .disabledSvgButton text {
     fill: grey;
 }
+
+#error {
+    color: red;
+    font-size: 1.5em;
+}

@@ -20,7 +20,11 @@ exports.login = function(username, password, callback) {
     if(username && password) {
         userdb.getPasswordHash(username).then(storedHash => {
 
-            verifyPassword(storedHash, password, username, callback)
+            if(storedHash) {
+                verifyPassword(storedHash, password, username, callback)
+            } else {
+                callback(false);
+            } 
     
         }); //getPassword
     } else {
