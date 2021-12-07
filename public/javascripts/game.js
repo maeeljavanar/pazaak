@@ -7,6 +7,7 @@ const svgns = "http://www.w3.org/2000/svg";
 const tableCardColor = 'green';
 const positiveCardColor = 'blue';
 const negativeCardColor = 'red';
+const switchBackgroundFraction = 2;
 var switchVals = ['p', 'p', 'p', 'p'];
 
 $(document).ready(function() {
@@ -257,9 +258,9 @@ function createCard(x, y, code, playable, index) {
         //switch card
         switchBackground = document.createElementNS(svgns, "rect");
         switchBackground.setAttribute("x", x);
-        switchBackground.setAttribute("y", parseInt(y) + (parseInt(cardHeight) / 2) + 'px');
+        switchBackground.setAttribute("y", parseInt(y) + (parseInt(cardHeight) * (switchBackgroundFraction - 1) / switchBackgroundFraction) + 'px');
         switchBackground.setAttribute("width", cardWidth);
-        switchBackground.setAttribute("height", (parseInt(cardHeight) / 2));
+        switchBackground.setAttribute("height", (parseInt(cardHeight) / switchBackgroundFraction) + 'px');
 
         //do background colors
         if(switchVals[index] == 'p') {
