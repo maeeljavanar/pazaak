@@ -137,7 +137,7 @@ function updateGame(game) {
     //update enemy hand
     for(let i = 0; i < game.enemyHand.cards; i++) {
         let handSlot = $(`#enemyHand${i}`);
-        createCard(handSlot.attr('x'), handSlot.attr('y'), 'u ', false);
+        createCard(handSlot.attr('x'), handSlot.attr('y'), 'u?', false);
     }
 
     //update count of cards on table
