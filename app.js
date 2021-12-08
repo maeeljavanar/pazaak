@@ -39,8 +39,8 @@ app.use(function(err, req, res, next) {
 
 //HTTPS if ssl is set in config
 if(config.sslCertificate && config.sslKey) {
-  var privateKey = fs.readFileSync(config.sslKey, 'utf-8');
-  var certificate = fs.readFileSync(config.sslCertificate, 'utf-8');
+  var privateKey = fs.readFileSync(config.sslKey, 'utf8');
+  var certificate = fs.readFileSync(config.sslCertificate, 'utf8');
 
   var sslOptions = {
     key: privateKey,
